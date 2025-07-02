@@ -24,8 +24,7 @@ if not GOOGLE_API_KEY:
 
 # Step 1: Get Transcript
 def get_transcript(video_id):
-    proxy_url = "http://135.148.120.6:80"
-    
+    proxy_url = "http://152.26.229.52:9443"
     session = requests.Session()
     session.proxies = {
         "http": proxy_url,
