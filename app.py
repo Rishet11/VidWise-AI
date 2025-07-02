@@ -14,7 +14,7 @@ import os
 # Config
 st.set_page_config(page_title="VidWise AI", layout="centered")
 st.title("🎥 VidWise AI: YouTube Q&A Bot")
-st.markdown("Ask questions about any YouTube video using transcripts and Gemini AI.")
+st.markdown("Ask questions about any YouTube video!")
 
 # Set API Key
 GOOGLE_API_KEY = "AIzaSyB_hssmmlz52TZsg8rqN0qylPoUgoyxVl4"
