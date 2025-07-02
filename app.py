@@ -10,6 +10,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
 import os
+import requests
 
 # Config
 st.set_page_config(page_title="VidWise AI", layout="centered")
@@ -23,9 +24,23 @@ if not GOOGLE_API_KEY:
 
 # Step 1: Get Transcript
 def get_transcript(video_id):
-    transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    full_text = "\n".join([t["text"] for t in transcript])
-    return full_text
+    proxy_url = "http://135.148.120.6:80"
+    
+    session = requests.Session()
+    session.proxies = {
+        "http": proxy_url,
+        "https": proxy_url
+    }
+
+    YouTubeTranscriptApi._session = session
+
+    try:
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+        return " ".join([d["text"] for d in transcript_list])
+    except Exception as e:
+        st.error(f"❌ Could not fetch transcript: {e}")
+        return None
+
 
 # Step 2: Embed & store
 def build_retriever(transcript):
