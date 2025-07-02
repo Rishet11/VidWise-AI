@@ -4,3 +4,4 @@ google-generativeai
 youtube-transcript-api
 sentence-transformers
 faiss-cpu
+requests[socks]
