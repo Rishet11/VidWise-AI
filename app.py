@@ -18,7 +18,7 @@ st.title("🎥 VidWise AI: YouTube Q&A Bot")
 st.markdown("Ask questions about any YouTube video!")
 
 # Set API Key
-GOOGLE_API_KEY = "AIzaSyB_hssmmlz52TZsg8rqN0qylPoUgoyxVl4"
+GOOGLE_API_KEY = "your_api_key"
 if not GOOGLE_API_KEY:
     GOOGLE_API_KEY = st.text_input("🔑 Enter your Google API Key", type="password")
 
