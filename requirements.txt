@@ -6,4 +6,4 @@ sentence-transformers
 faiss-cpu
 requests[socks]
 requests
-
+ChatGoogleGenerativeAI
