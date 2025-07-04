@@ -24,13 +24,21 @@ if not GOOGLE_API_KEY:
 
 # Step 1: Get Transcript
 def get_transcript(video_id):
-    proxy_url = "http://198.177.254.131:4145"
+    SCRAPERAPI_KEY = st.secrets.get("SCRAPERAPI_KEY") or st.text_input("🛡️ Enter your ScraperAPI Key", type="password")
+    
+    if not SCRAPERAPI_KEY:
+        st.warning("Please enter your ScraperAPI key.")
+        return None
+
     session = requests.Session()
+
+    # ScraperAPI Proxy format (rotates IP, adds headers)
     session.proxies = {
-        "http": proxy_url,
-        "https": proxy_url
+        "http": f"http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001",
+        "https": f"http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001"
     }
 
+    # Override youtube_transcript_api internal session
     YouTubeTranscriptApi._session = session
 
     try:
