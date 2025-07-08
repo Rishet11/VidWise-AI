@@ -85,8 +85,8 @@ def get_transcript(video_id):
 
     # ScraperAPI Proxy format (rotates IP, adds headers)
     session.proxies = {
-        "http": f"http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001",
-        "https": f"http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001",
+        "http": "http://51.79.50.31:9300",
+        "https": "http://51.79.50.31:9300"
     }
 
     # Override youtube_transcript_api internal session
