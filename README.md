@@ -53,7 +53,7 @@ It uses **advanced Retrieval-Augmented Generation (RAG)** and state-of-the-art r
 
 ## 📸 Screenshots
 
-> _Coming soon_ (Add Streamlit UI previews here if you want)
+> _Coming soon_ 
 
 ---
 
