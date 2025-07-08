@@ -11,7 +11,6 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain.retrievers.document_compressors.listwise_rerank import LLMListwiseRerank
-
 from langchain.retrievers import ContextualCompressionRetriever
 import os
 import requests 
@@ -130,26 +129,32 @@ def retrieve_documents(vector_store, question, chunk_count):
         retriever=vector_store.as_retriever(search_type=search_type, search_kwargs=search_kwargs),
         llm=llm
     )
-    #reranker = LLMReranker.from_llm(llm)
+
+    #Reranking
     reranker = LLMListwiseRerank.from_llm(llm=llm, top_n=4)
     
+    #Contextual Compression 
     compression_retriever = ContextualCompressionRetriever(
         base_compressor= reranker,
         base_retriever=retriever,
     )
         
     
-    retrieved_docs = compression_retriever.get_relevant_documents(question)
+    retrieved_docs = compression_retriever.invoke(question)
     context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
     return context_text
 
 def build_prompt(context_text, question):
     prompt = PromptTemplate(
         template="""
-        You are a helpful assistant.
+        You are **VidWise AI**, a smart assistant that helps answer questions based on YouTube video transcripts.
         Answer ONLY from the provided transcript context.
-        If the context is insufficient, just say you don't know.
-
+        If the context is insufficient, just say 'This video doesn’t seem to mention that, so I’m not sure.'
+        🎯 INSTRUCTIONS:
+        - Answer the question directly and clearly.
+        - Do NOT say "based on the transcript" or refer to the context explicitly.
+        
+        📚 TRANSCRIPT CONTEXT:
         {context}
         Question: {question}
         """,
