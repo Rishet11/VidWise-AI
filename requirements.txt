@@ -1,5 +1,5 @@
 streamlit
-langchain
+langchain>=0.1.17
 langchain-community
 langchain-google-genai
 langchain-huggingface
@@ -13,4 +13,6 @@ langdetect
 deep-translator
 pinecone
 langchain-pinecone
+
+
 
