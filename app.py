@@ -10,8 +10,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain.retrievers.document_compressors.llm_rerank import LLMReranker
-
+from langchain.retrievers.document_compressors import LLMReranker
 from langchain.retrievers import ContextualCompressionRetriever
 import os
 import requests 
