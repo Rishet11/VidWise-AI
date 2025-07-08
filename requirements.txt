@@ -1,9 +1,16 @@
 streamlit
 langchain
+langchain-community
+langchain-google-genai
+langchain-huggingface
 google-generativeai
 youtube-transcript-api
 sentence-transformers
 faiss-cpu
 requests[socks]
 requests
+langdetect 
+deep-translator
+pinecone
+langchain-pinecone
 
