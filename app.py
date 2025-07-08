@@ -10,7 +10,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain.retrievers.document_compressors import LLMReranker
+from langchain.retrievers.document_compressors.listwise_rerank import LLMListwiseRerank
+
 from langchain.retrievers import ContextualCompressionRetriever
 import os
 import requests 
@@ -129,7 +130,8 @@ def retrieve_documents(vector_store, question, chunk_count):
         retriever=vector_store.as_retriever(search_type=search_type, search_kwargs=search_kwargs),
         llm=llm
     )
-    reranker = LLMReranker.from_llm(llm)
+    #reranker = LLMReranker.from_llm(llm)
+    reranker = LLMListwiseRerank.from_llm(llm=llm, top_n=4)
     
     compression_retriever = ContextualCompressionRetriever(
         base_compressor= reranker,
