@@ -6,7 +6,8 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
-from langchain.chains import RetrievalQA
+from langchain.memory import ConversationBufferMemory
+from langchain.schema import HumanMessage, AIMessage
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -48,7 +49,7 @@ except Exception:
 # LLM Initialization
 llm = ChatGoogleGenerativeAI(
         model="models/gemini-1.5-flash", 
-        google_api_key=GOOGLE_API_KEY
+        google_api_key=GOOGLE_API_KEY,
     )
 
 
@@ -77,6 +78,7 @@ def extract_youtube_id(url):
             return match_shorts.group(1)
 
     return None  # No valid video ID found
+
 
 
 # Step 2: Get Transcript
@@ -148,7 +150,15 @@ def retrieve_documents(vector_store, question, chunk_count):
     context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
     return context_text
 
-def build_prompt(context_text, question):
+def build_prompt(context_text, question, chat_history):
+    messages = []
+    for msg in chat_history:
+        if isinstance(msg, HumanMessage):
+            messages.append(f"User: {msg.content}")
+        elif isinstance(msg, AIMessage):
+            messages.append(f"VidWise AI: {msg.content}")
+    history_text = "\n".join(messages)
+    
     prompt = PromptTemplate(
         template="""
         You are **VidWise AI**, a smart assistant that helps answer questions based on YouTube video transcripts.
@@ -158,23 +168,32 @@ def build_prompt(context_text, question):
         - Answer the question directly and clearly.
         - Do NOT say "based on the transcript" or refer to the context explicitly.
         
+        🧠 Previous conversation:
+        {history_text}
+        
         📚 TRANSCRIPT CONTEXT:
         {context}
         Question: {question}
         """,
-        input_variables=['context', 'question']
+        input_variables=['history_text', 'context', 'question']
     )
 
-    return prompt.invoke({"context": context_text, "question": question})
+    return prompt.invoke({"history_text": history_text, "context": context_text, "question": question})
 
 def generate_response(prompt_text):
     ans=  llm.invoke(prompt_text)
     return ans.content
 
 def run_rag_chain(vector_store, question: str, chunk_count: int):
+    chat_history = st.session_state.chat_memory.buffer
     context_text = retrieve_documents(vector_store, question, chunk_count)
-    prompt_text = build_prompt(context_text, question)
+    prompt_text = build_prompt(context_text, question, chat_history)
     response = generate_response(prompt_text)
+    
+    # Save current turn to memory
+    st.session_state.chat_memory.chat_memory.add_user_message(question)
+    st.session_state.chat_memory.chat_memory.add_ai_message(response)
+    
     return response, context_text
 
 
@@ -186,7 +205,7 @@ video_url = st.text_input(
 
 if video_url:
     try:
-        # video_id = video_url.split("v=")[-1].split("&")[0]
+
         video_id = extract_youtube_id(video_url)
         try:
             transcript = get_transcript(video_id)
@@ -196,11 +215,23 @@ if video_url:
         st.success("Transcript loaded successfully!")
 
         vector_store ,chunk_count = create_embeddings(transcript)
-        #qa_chain = get_qa_chain(vector_store)
+        
+        if "chat_memory" not in st.session_state:
+            st.session_state.chat_memory = ConversationBufferMemory(return_messages=True)
+            
+        
+        st.subheader("🧠 Chat with the video")
+
+        # Show past messages
+        for msg in st.session_state.chat_memory.buffer:
+            if isinstance(msg, HumanMessage):
+                st.markdown(f"**You:** {msg.content}")
+            elif isinstance(msg, AIMessage):
+                st.markdown(f"**VidWise AI:** {msg.content}")
         
        
 
-        question = st.text_input("❓ Ask a question about the video:")
+        question = st.text_input("❓ Ask a question about the video:", key= "chat_input")
         if question:
             response, context_text = run_rag_chain(vector_store, question, chunk_count)
             with st.spinner("🤖 Generating answer..."):
