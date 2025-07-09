@@ -89,7 +89,9 @@ def get_transcript(video_id):
         "http": "http://51.79.50.31:9300",
         "https": "http://51.79.50.31:9300"
     }
-
+    session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    })
     # Override youtube_transcript_api internal session
     YouTubeTranscriptApi._session = session
 
