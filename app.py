@@ -1,5 +1,7 @@
 import streamlit as st
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
+from youtube_transcript_api.proxies import WebshareProxyConfig
 from sentence_transformers import SentenceTransformer 
 import faiss
 import numpy as np
@@ -80,24 +82,38 @@ def extract_youtube_id(url):
 # Step 2: Get Transcript
 @st.cache_data(show_spinner="📄 Fetching transcript...")
 def get_transcript(video_id):
-    session = requests.Session()
+    username = "xixsylrr"
+    password = "mxn9dwfrp1go"
+    proxy_list = [
+        ("38.154.227.167", 5868),
+        ("198.23.239.134", 6540),
+        ("207.244.217.165", 6712),
+        ("107.172.163.27", 6543),
+        ("216.10.27.159", 6837),
+        ("136.0.207.84", 6661),
+        ("64.64.118.149", 6732),
+        ("142.147.128.93", 6593),
+        ("104.239.105.125", 6655),
+        ("206.41.172.74", 6634),
+    ]
 
-    # ScraperAPI Proxy format (rotates IP, adds headers)
-    session.proxies = {
-        "http": "http://51.79.50.31:9300",
-        "https": "http://51.79.50.31:9300"
-    }
+    for ip, port in proxy_list:
+        proxy_url = f"http://{username}:{password}@{ip}:{port}"
+        proxy = {"http": proxy_url, "https": proxy_url}
 
-    # Override youtube_transcript_api internal session
-    YouTubeTranscriptApi._session = session
+        session = requests.Session()
+        session.proxies = proxy
+        YouTubeTranscriptApi._session = session
 
-    try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        return " ".join([d["text"] for d in transcript_list])
-    except Exception as e:
-        # Can't use st.error inside cached function, so just raise
-        raise RuntimeError(f"❌ Could not fetch transcript: {e}")
+        try:
+            transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+            return " ".join([d["text"] for d in transcript_list])
+        except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable) as e:
+            raise RuntimeError(f"❌ Transcript not available: {e}")
+        except Exception as e:
+            st.warning(f"⚠️ Proxy {ip}:{port} failed — trying next...")
 
+    raise RuntimeError("❌ All proxies failed or transcript is unavailable.")
 
 # Step 3: Embed & store
 @st.cache_resource(show_spinner="🔗 Building retriever...")
