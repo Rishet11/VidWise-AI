@@ -1,7 +1,6 @@
 import streamlit as st
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
-from youtube_transcript_api.proxies import WebshareProxyConfig
 from sentence_transformers import SentenceTransformer 
 import faiss
 import numpy as np
@@ -23,7 +22,9 @@ from langchain.prompts import PromptTemplate
 import logging
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from dotenv import load_dotenv
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 logging.basicConfig()
 logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 load_dotenv()
@@ -84,18 +85,25 @@ def extract_youtube_id(url):
 # Step 2: Get Transcript
 @st.cache_data(show_spinner="📄 Fetching transcript...")
 def get_transcript(video_id):
-    session = requests.Session()
+    proxy_url = f"http://scraperapi:{SCRAPERAPI_KEY}@proxy-server.scraperapi.com:8001"
 
-    # ScraperAPI Proxy format (rotates IP, adds headers)
+    session = requests.Session()
     session.proxies = {
-        "http": "http://51.79.50.31:9300",
-        "https": "http://51.79.50.31:9300"
+        "http": proxy_url,
+        "https": proxy_url
     }
+    
     session.headers.update({
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                  "AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/114.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9"
     })
+
     # Override youtube_transcript_api internal session
     YouTubeTranscriptApi._session = session
+    ip_check = session.get("http://httpbin.org/ip")
+    print("Detected IP via ScraperAPI:", ip_check.text)
 
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
@@ -220,7 +228,7 @@ if video_url:
             st.session_state.chat_memory = ConversationBufferMemory(return_messages=True)
             
         
-        st.subheader("🧠 Chat with the video")
+        #st.subheader("🧠 Chat with the video")
 
         # Show past messages
         for msg in st.session_state.chat_memory.buffer:
@@ -245,11 +253,3 @@ if video_url:
                 
     except Exception as e:
         st.error(f"Error: {str(e)}")
-        
-        
-
-
-
-
-    
-    
