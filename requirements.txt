@@ -13,6 +13,8 @@ langdetect
 deep-translator
 pinecone
 langchain-pinecone
+simsimd
+
 
 
 

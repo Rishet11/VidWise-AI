@@ -14,6 +14,7 @@ from langchain.schema import Document
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain.retrievers.document_compressors.listwise_rerank import LLMListwiseRerank
 from langchain.retrievers import ContextualCompressionRetriever
+from deep_translator import GoogleTranslator 
 import os
 import requests 
 from urllib.parse import urlparse, parse_qs
@@ -78,7 +79,7 @@ def extract_youtube_id(url):
         if match_shorts:
             return match_shorts.group(1)
 
-    return None  # No valid video ID found
+    return None 
 
 
 
@@ -108,8 +109,16 @@ def get_transcript(video_id):
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
         return " ".join([d["text"] for d in transcript_list])
+    
+    except:
+        pass
+    
+    try:
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=["hi"])
+        return " ".join([d["text"] for d in transcript_list])
+    
+    
     except Exception as e:
-        # Can't use st.error inside cached function, so just raise
         raise RuntimeError(f"❌ Could not fetch transcript: {e}")
 
 
@@ -120,8 +129,11 @@ def create_embeddings(transcript):
     chunks = text_splitter.split_text(transcript)
     docs = [Document(page_content=chunk) for chunk in chunks]
 
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    # embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    #embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    #embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+
 
     vector_store = FAISS.from_documents(docs, embeddings)
     return vector_store , len(docs)
