@@ -139,6 +139,20 @@ def create_embeddings(transcript):
     return vector_store , len(docs)
 
 
+def generate_summary(transcript):
+    """Generates a summary of the transcript."""
+    prompt = f"""
+    You are an expert at summarizing YouTube videos. Please provide a concise summary of the following transcript. 
+    Focus on the main points and key takeaways. Use bullet points for clarity.
+
+    Transcript:
+    {transcript}
+    """
+    response = llm.invoke(prompt)
+    return response.content
+
+
+
 # Step 4: RAG chain
 def retrieve_documents(vector_store, question, chunk_count):
     #retriever = vector_store.as_retriever(search_type="similarity")
@@ -227,17 +241,36 @@ if video_url:
     try:
 
         video_id = extract_youtube_id(video_url)
+        
+        transcript_placeholder = st.empty()
         try:
             transcript = get_transcript(video_id)
         except Exception as e:
             st.error(str(e))
             st.stop()
-        st.success("Transcript loaded successfully!")
+       
+        #Success message for loading transcript
+        with transcript_placeholder.container():
+            st.success("✅ Transcript loaded successfully!")
 
+        #Creating Vector Store
         vector_store ,chunk_count = create_embeddings(transcript)
+        
+        #Removing the Success message
+        transcript_placeholder.empty()
+        
         
         if "chat_memory" not in st.session_state:
             st.session_state.chat_memory = ConversationBufferMemory(return_messages=True)
+            
+        if st.button("✨ Get AI Summary"):
+            with st.spinner("✍️ Generating summary..."):
+                summary = generate_summary(transcript)
+                st.markdown("### 📜 Video Summary:")
+                st.write(summary)
+                
+                st.session_state.chat_memory.chat_memory.add_ai_message(summary)
+                
             
         
         #st.subheader("🧠 Chat with the video")
