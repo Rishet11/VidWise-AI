@@ -259,7 +259,6 @@ if video_url:
         #Removing the Success message
         transcript_placeholder.empty()
         
-        
         if "chat_memory" not in st.session_state:
             st.session_state.chat_memory = ConversationBufferMemory(return_messages=True)
             
