@@ -263,20 +263,53 @@ if video_url:
         if "chat_memory" not in st.session_state:
             st.session_state.chat_memory = ConversationBufferMemory(return_messages=True)
             
-        if st.button("✨ Get AI Summary"):
-            with st.spinner("✍️ Generating summary..."):
-                summary = generate_summary(transcript)
-                st.markdown("### 📜 Video Summary:")
-                st.write(summary)
-                
-                st.session_state.chat_memory.chat_memory.add_ai_message(summary)
-                
+            
+        if "summary_generated" not in st.session_state:
+            st.session_state.summary_generated = False
+            
+        if "summary_text" not in st.session_state:
+             st.session_state.summary_text = ""
+        
+        #Show Get Summary button only if summary hasn't been generated
+        if not st.session_state.summary_generated:
+            if st.button("✨ Get Summary"):
+                with st.spinner("✍️ Generating summary..."):
+                    summary = generate_summary(transcript)
+                    st.session_state.summary_text = summary
+                    st.session_state.summary_generated = True
+                    st.session_state.chat_memory.chat_memory.add_ai_message(summary)
+                    st.rerun()
+
+        # Show summary and regenerate button after summary is generated
+        if st.session_state.summary_generated:
+            
+            
+            if st.button("🔄 Regenerate Summary"):
+                with st.spinner("♻️ Regenerating..."):
+                    new_summary = generate_summary(transcript)
+                    st.session_state.summary_text = new_summary
+                    
+                    # Update memory (replace last message if it's a summary)
+                    if (
+                        st.session_state.chat_memory.chat_memory.messages and 
+                        st.session_state.chat_memory.chat_memory.messages[-1].type == "ai"
+                    ):
+                        st.session_state.chat_memory.chat_memory.messages.pop()
+                    st.session_state.chat_memory.chat_memory.add_ai_message(new_summary)
+                    st.rerun()
+                    
+            #Summary text below regenerate button 
+            st.markdown("### 📜 Video Summary:")  
+            st.markdown(st.session_state.summary_text)
             
         
         #st.subheader("🧠 Chat with the video")
 
         # Show past messages
         for msg in st.session_state.chat_memory.buffer:
+            # Skip the summary message if it matches the current summary
+            if isinstance(msg, AIMessage) and msg.content == st.session_state.summary_text:
+                continue
             if isinstance(msg, HumanMessage):
                 st.markdown(f"**You:** {msg.content}")
             elif isinstance(msg, AIMessage):
