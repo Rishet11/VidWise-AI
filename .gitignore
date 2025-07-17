@@ -9,14 +9,6 @@ env/
 *.env
 .streamlit/secrets.toml
 .ipynb_checkpoints/
-1_*
-2_*
-3_*
-4_*
-5_*
-6_*
-7_*
-8_*
 
-agents.ipynb
-YT_Chatbot.ipynb
+
+old_app.py
