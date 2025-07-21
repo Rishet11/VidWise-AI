@@ -64,7 +64,7 @@ def handle_all_events():
 
         show_history(st.session_state.chat_memory, st.session_state.summary_text)
 
-        question = st.text_input("❓ Ask a question about the video:", key="chat_input")
+        question = st.chat_input("Ask anything about the video:", key="chat_input")
         if question:
             with st.spinner("🤖 Generating answer..."):
                 response, context_text = run_rag_chain(vector_store, question, chunk_count, st.session_state.chat_memory)

@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_community.chat_memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory
 
 from config.secrets import GOOGLE_API_KEY
 
