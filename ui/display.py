@@ -62,7 +62,6 @@ def show_history(chat_memory, summary_text=""):
             st.markdown(f"""
                 <div class="chat-row user-message">
                     <div class="message-bubble user-bubble">
-                        <b>You:</b><br>
                         {msg.content}
                     </div>
                 </div>
