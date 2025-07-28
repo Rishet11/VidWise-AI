@@ -75,7 +75,7 @@ def run_rag_chain(vector_store, question: str, chunk_count: int, memory):
     prompt_text = build_prompt(context_text, question, memory.buffer)
     response = generate_response(prompt_text)
 
-    memory.chat_memory.add_user_message(question)
-    memory.chat_memory.add_ai_message(response)
+    #memory.chat_memory.add_user_message(question)
+    #memory.chat_memory.add_ai_message(response)
 
     return response, context_text

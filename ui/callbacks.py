@@ -70,17 +70,27 @@ def handle_all_events():
         
         # Chat input is always shown (moved outside the summary_generated block)
         question = st.chat_input("Ask anything about the video:", key="chat_input")
-        
+                
         if question:
+            st.session_state.chat_memory.chat_memory.add_user_message(question)
+            
+            conversation_placeholder = st.empty()
+            
+            # Show the conversation with just the user question
+            with conversation_placeholder.container():
+                show_history(st.session_state.chat_memory, st.session_state.summary_text)
+            
             with st.spinner("🤖 Generating answer..."):
                 response, context_text = run_rag_chain(vector_store, question, chunk_count, st.session_state.chat_memory)
-                st.markdown("### ✅ Answer:")
-                st.text(response)
-                #show_context_chunks(context_text)
+                st.session_state.chat_memory.chat_memory.add_ai_message(response)
+                
+                with conversation_placeholder.container():
+                    show_history(st.session_state.chat_memory, st.session_state.summary_text)
                 
                 # Set flag to collapse expander only if summary was already generated
                 if st.session_state.summary_generated:
                     st.session_state.question_answered_after_summary = True
+                
                 
     except Exception as e:
         st.error(f"Error: {str(e)}")
