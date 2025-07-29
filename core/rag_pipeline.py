@@ -69,7 +69,6 @@ def build_prompt(context_text, question, chat_history):
 
 def generate_response(prompt_text):
     response_stream = llm.stream(prompt_text)
-    # Return a generator that yields the content of each chunk
     return (chunk.content for chunk in response_stream)
 
 # CHANGE: This function now returns the generator to the UI
