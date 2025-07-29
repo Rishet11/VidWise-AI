@@ -66,16 +66,18 @@ def build_prompt(context_text, question, chat_history):
 
     return prompt.invoke({"history_text": history_text, "context": context_text, "question": question})
 
-def generate_response(prompt_text):
-    ans=  llm.invoke(prompt_text)
-    return ans.content
 
+def generate_response(prompt_text):
+    response_stream = llm.stream(prompt_text)
+    # Return a generator that yields the content of each chunk
+    return (chunk.content for chunk in response_stream)
+
+# CHANGE: This function now returns the generator to the UI
 def run_rag_chain(vector_store, question: str, chunk_count: int, memory):
     context_text = retrieve_documents(vector_store, question, chunk_count)
     prompt_text = build_prompt(context_text, question, memory.buffer)
-    response = generate_response(prompt_text)
+    
 
-    #memory.chat_memory.add_user_message(question)
-    #memory.chat_memory.add_ai_message(response)
+    response_generator = generate_response(prompt_text)
 
-    return response, context_text
+    return response_generator, context_text

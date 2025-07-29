@@ -5,7 +5,6 @@ from core.summarizer import generate_summary
 from core.rag_pipeline import run_rag_chain
 from models.llm import memory
 from ui.display import show_history, show_context_chunks
-import time
 
 def handle_all_events():
     video_url = st.text_input(
@@ -15,6 +14,7 @@ def handle_all_events():
     
     if not video_url:
         return
+    
     
     try:
         video_id = extract_youtube_id(video_url)
@@ -36,11 +36,8 @@ def handle_all_events():
         if "summary_text" not in st.session_state:
             st.session_state.summary_text = ""
             
-        if "total_questions" not in st.session_state:
-            st.session_state.total_questions = 0
-            
-        if "expander_placeholder" not in st.session_state:
-            st.session_state.expander_placeholder = None
+        if "question_answered_after_summary" not in st.session_state:
+            st.session_state.question_answered_after_summary = False
         
         if not st.session_state.summary_generated:
             if st.button("✨ Get Summary"):
@@ -65,33 +62,17 @@ def handle_all_events():
                     st.session_state.chat_memory.chat_memory.add_ai_message(new_summary)
                     st.rerun()
             
-            # Create or get the expander placeholder
-            if st.session_state.expander_placeholder is None:
-                st.session_state.expander_placeholder = st.empty()
-            
-            # CRITICAL FIX: Completely recreate expander on every question
-            should_be_expanded = st.session_state.total_questions == 0
-            
-            with st.session_state.expander_placeholder.container():
-                with st.expander("### 📜 Video Summary", expanded=should_be_expanded):
-                    st.write(st.session_state.summary_text)
+            # Expander that closes only after summary is generated AND a question is answered
+            expander_expanded = not (st.session_state.summary_generated and st.session_state.question_answered_after_summary)
+            with st.expander("### 📜 Video Summary", expanded=expander_expanded):
+                st.write(st.session_state.summary_text)
             
             show_history(st.session_state.chat_memory, st.session_state.summary_text)
         
-        # Chat input is always shown
+        # Chat input is always shown (moved outside the summary_generated block)
         question = st.chat_input("Ask anything about the video:", key="chat_input")
                 
         if question:
-            # FORCE EXPANDER CLOSED: Increment counter and recreate expander
-            st.session_state.total_questions += 1
-            
-            # Clear and recreate the expander to force closed state
-            if st.session_state.expander_placeholder is not None:
-                st.session_state.expander_placeholder.empty()
-                with st.session_state.expander_placeholder.container():
-                    with st.expander("### 📜 Video Summary", expanded=False):
-                        st.write(st.session_state.summary_text)
-            
             st.session_state.chat_memory.chat_memory.add_user_message(question)
             
             conversation_placeholder = st.empty()
@@ -100,12 +81,17 @@ def handle_all_events():
             with conversation_placeholder.container():
                 show_history(st.session_state.chat_memory, st.session_state.summary_text)
             
-            with st.spinner("🤖 Generating answer..."):
-                response, context_text = run_rag_chain(vector_store, question, chunk_count, st.session_state.chat_memory)
+            with st.spinner(" Generating answer..."):
+                response_stream, context_text = run_rag_chain(vector_store, question, chunk_count, st.session_state.chat_memory)
+                response= st.write_stream(response_stream)
                 st.session_state.chat_memory.chat_memory.add_ai_message(response)
                 
                 with conversation_placeholder.container():
                     show_history(st.session_state.chat_memory, st.session_state.summary_text)
+                
+                # Set flag to collapse expander only if summary was already generated
+                if st.session_state.summary_generated:
+                    st.session_state.question_answered_after_summary = True
                 
                 
     except Exception as e:
