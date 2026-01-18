@@ -1,5 +1,5 @@
 import streamlit as st
-from langchain.schema import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
 
 def message_alignment_style():
     """

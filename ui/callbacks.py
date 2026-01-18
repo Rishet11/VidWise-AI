@@ -3,10 +3,13 @@ from core.youtube_utils import extract_youtube_id, get_transcript
 from core.embeddings import create_embeddings
 from core.summarizer import generate_summary
 from core.rag_pipeline import run_rag_chain
-from models.llm import memory
+from models.llm import memory, llm
 from ui.display import show_history, show_context_chunks
 
 def handle_all_events():
+    if llm is None:
+        st.warning("⚠️ **GOOGLE_API_KEY** is missing! Please set it in your `.env` file or Streamlit secrets to use the AI features.")
+
     video_url = st.text_input(
         "📺 Enter YouTube Video URL:",
         placeholder="https://www.youtube.com/watch?v=Gfr50f6ZBvo"

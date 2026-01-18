@@ -1,8 +1,8 @@
-from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain.retrievers.document_compressors.listwise_rerank import LLMListwiseRerank
-from langchain.retrievers import ContextualCompressionRetriever
-from langchain.prompts import PromptTemplate
-from langchain.schema import HumanMessage, AIMessage
+from langchain_classic.retrievers.multi_query import MultiQueryRetriever
+from langchain_classic.retrievers.document_compressors.listwise_rerank import LLMListwiseRerank
+from langchain_classic.retrievers import ContextualCompressionRetriever
+from langchain_core.prompts import PromptTemplate
+from langchain_core.messages import HumanMessage, AIMessage
 from models.llm import llm
 import streamlit as st
 
