@@ -48,22 +48,25 @@ def get_transcript(video_id):
     "Accept-Language": "en-US,en;q=0.9"
     })
 
-    # Override youtube_transcript_api internal session
-    YouTubeTranscriptApi._session = session
-    ip_check = session.get("http://httpbin.org/ip")
-    print("Detected IP via ScraperAPI:", ip_check.text)
-
-    try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        return " ".join([d["text"] for d in transcript_list])
+    # In newer versions of youtube-transcript-api, we instantiate the API with the session
+    api = YouTubeTranscriptApi(http_client=session)
     
+    # Optional: diagnostic check
+    try:
+        ip_check = session.get("http://httpbin.org/ip")
+        print("Detected IP via ScraperAPI:", ip_check.text)
     except:
         pass
-    
+
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=["hi"])
+        # fetch() returns a list of dictionaries with 'text', 'start', 'duration'
+        transcript_list = api.fetch(video_id)
         return " ".join([d["text"] for d in transcript_list])
     
-    
-    except Exception as e:
-        raise RuntimeError(f"❌ Could not fetch transcript: {e}")
+    except Exception as e1:
+        print(f"Primary fetch failed: {e1}")
+        try:
+            transcript_list = api.fetch(video_id, languages=["hi", "en"])
+            return " ".join([d["text"] for d in transcript_list])
+        except Exception as e2:
+            raise RuntimeError(f"❌ Could not fetch transcript: {e2}")
