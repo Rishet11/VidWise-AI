@@ -6,6 +6,7 @@ venv/
 ENV/
 env/
 .env
+.env.*
 *.env
 .streamlit/secrets.toml
 .ipynb_checkpoints/
