@@ -1,0 +1,929 @@
+{
+  "nodes": [
+    {
+      "id": "app",
+      "label": "app.py",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_embeddings",
+      "label": "embeddings.py",
+      "file_type": "code",
+      "source_file": "core/embeddings.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_embeddings_create_embeddings",
+      "label": "create_embeddings()",
+      "file_type": "code",
+      "source_file": "core/embeddings.py",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_rag_pipeline",
+      "label": "rag_pipeline.py",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_rag_pipeline_retrieve_documents",
+      "label": "retrieve_documents()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_rag_pipeline_build_prompt",
+      "label": "build_prompt()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L39",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_rag_pipeline_generate_response",
+      "label": "generate_response()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L70",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_rag_pipeline_run_rag_chain",
+      "label": "run_rag_chain()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L75",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_summarizer",
+      "label": "summarizer.py",
+      "file_type": "code",
+      "source_file": "core/summarizer.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_summarizer_generate_summary",
+      "label": "generate_summary()",
+      "file_type": "code",
+      "source_file": "core/summarizer.py",
+      "source_location": "L3",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_summarizer_rationale_4",
+      "label": "Generates a summary of the transcript.",
+      "file_type": "rationale",
+      "source_file": "core/summarizer.py",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_youtube_utils",
+      "label": "youtube_utils.py",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_youtube_utils_extract_youtube_id",
+      "label": "extract_youtube_id()",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L8",
+      "_origin": "ast"
+    },
+    {
+      "id": "core_youtube_utils_get_transcript",
+      "label": "get_transcript()",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L35",
+      "_origin": "ast"
+    },
+    {
+      "id": "models_llm",
+      "label": "llm.py",
+      "file_type": "code",
+      "source_file": "models/llm.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_callbacks",
+      "label": "callbacks.py",
+      "file_type": "code",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_callbacks_handle_all_events",
+      "label": "handle_all_events()",
+      "file_type": "code",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display",
+      "label": "display.py",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display_message_alignment_style",
+      "label": "message_alignment_style()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L4",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display_show_history",
+      "label": "show_history()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L51",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display_show_context_chunks",
+      "label": "show_context_chunks()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L80",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display_rationale_5",
+      "label": "Injects custom CSS for chat message alignment and styling,     with support for",
+      "file_type": "rationale",
+      "source_file": "ui/display.py",
+      "source_location": "L5",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_display_rationale_52",
+      "label": "Displays the chat history with right-left alignment for user and AI messages.",
+      "file_type": "rationale",
+      "source_file": "ui/display.py",
+      "source_location": "L52",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_layout",
+      "label": "layout.py",
+      "file_type": "code",
+      "source_file": "ui/layout.py",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ui_layout_build_layout",
+      "label": "build_layout()",
+      "file_type": "code",
+      "source_file": "ui/layout.py",
+      "source_location": "L3",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "app",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "ui_layout",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "ui_callbacks",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "app_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "langchain_text_splitters",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "langchain_core_documents",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "langchain_community_vectorstores",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "langchain_huggingface",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "core_embeddings",
+      "target": "core_embeddings_create_embeddings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "langchain_classic_retrievers_multi_query",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "langchain_classic_retrievers_document_compressors_listwise_rerank",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "langchain_classic_retrievers",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "langchain_core_prompts",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "langchain_core_messages",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "models_llm",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_retrieve_documents",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_build_prompt",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_generate_response",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_retrieve_documents",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_build_prompt",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_generate_response",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "core_summarizer",
+      "target": "models_llm",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "core_summarizer",
+      "target": "core_summarizer_generate_summary",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "core_summarizer_rationale_4",
+      "target": "core_summarizer_generate_summary",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "re",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "requests",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "urllib_parse",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "youtube_transcript_api",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "config_secrets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "core_youtube_utils",
+      "target": "core_youtube_utils_get_transcript",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "models_llm",
+      "target": "langchain_google_genai",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "models/llm.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "models_llm",
+      "target": "langchain_classic_memory",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "models/llm.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "models_llm",
+      "target": "config_secrets",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "models/llm.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_embeddings",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_summarizer",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_rag_pipeline",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "models_llm",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "ui_display",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "ui_callbacks_handle_all_events",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display",
+      "target": "langchain_core_messages",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display",
+      "target": "ui_display_message_alignment_style",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display",
+      "target": "ui_display_show_history",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display",
+      "target": "ui_display_show_context_chunks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display_show_history",
+      "target": "ui_display_message_alignment_style",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display_rationale_5",
+      "target": "ui_display_message_alignment_style",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_display_rationale_52",
+      "target": "ui_display_show_history",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_layout",
+      "target": "streamlit",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/layout.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_layout",
+      "target": "ui_layout_build_layout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/layout.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "ui_layout_build_layout",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "app",
+      "target": "ui_callbacks_handle_all_events",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils_get_transcript",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_embeddings_create_embeddings",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_summarizer_generate_summary",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "ui_display_show_history",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks",
+      "target": "ui_display_show_context_chunks",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "app_main",
+      "target": "ui_layout_build_layout",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "app_main",
+      "target": "ui_callbacks_handle_all_events",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_youtube_utils_get_transcript",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_embeddings_create_embeddings",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_summarizer_generate_summary",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "ui_display_show_history",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L88",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

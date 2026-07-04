@@ -1,0 +1,1148 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "vidwise_ai_core_technologies",
+        "label": "VidWise-AI Core Technologies",
+        "nodes": [
+          "vidwise_ai_readme_langchain",
+          "vidwise_ai_readme_streamlit",
+          "vidwise_ai_readme_faiss",
+          "vidwise_ai_readme_gemini",
+          "vidwise_ai_readme_youtube_transcript_api"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "README.md"
+      },
+      {
+        "id": "vidwise_ai_required_packages",
+        "label": "Required Packages",
+        "nodes": [
+          "vidwise_ai_requirements_langchain",
+          "vidwise_ai_requirements_streamlit",
+          "vidwise_ai_requirements_faiss_cpu",
+          "vidwise_ai_requirements_google_generativeai",
+          "vidwise_ai_requirements_youtube_transcript_api"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "requirements.txt"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "app.py",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "app",
+      "community": 3,
+      "norm_label": "app.py"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "app.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "app_main",
+      "community": 3,
+      "norm_label": "main()"
+    },
+    {
+      "label": "embeddings.py",
+      "file_type": "code",
+      "source_file": "core/embeddings.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "core_embeddings",
+      "community": 6,
+      "norm_label": "embeddings.py"
+    },
+    {
+      "label": "create_embeddings()",
+      "file_type": "code",
+      "source_file": "core/embeddings.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "core_embeddings_create_embeddings",
+      "community": 6,
+      "norm_label": "create_embeddings()"
+    },
+    {
+      "label": "rag_pipeline.py",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "core_rag_pipeline",
+      "community": 1,
+      "norm_label": "rag_pipeline.py"
+    },
+    {
+      "label": "retrieve_documents()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "core_rag_pipeline_retrieve_documents",
+      "community": 1,
+      "norm_label": "retrieve_documents()"
+    },
+    {
+      "label": "build_prompt()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "core_rag_pipeline_build_prompt",
+      "community": 1,
+      "norm_label": "build_prompt()"
+    },
+    {
+      "label": "generate_response()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "core_rag_pipeline_generate_response",
+      "community": 1,
+      "norm_label": "generate_response()"
+    },
+    {
+      "label": "run_rag_chain()",
+      "file_type": "code",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "core_rag_pipeline_run_rag_chain",
+      "community": 1,
+      "norm_label": "run_rag_chain()"
+    },
+    {
+      "label": "summarizer.py",
+      "file_type": "code",
+      "source_file": "core/summarizer.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "core_summarizer",
+      "community": 2,
+      "norm_label": "summarizer.py"
+    },
+    {
+      "label": "generate_summary()",
+      "file_type": "code",
+      "source_file": "core/summarizer.py",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "core_summarizer_generate_summary",
+      "community": 2,
+      "norm_label": "generate_summary()"
+    },
+    {
+      "label": "Generates a summary of the transcript.",
+      "file_type": "rationale",
+      "source_file": "core/summarizer.py",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "core_summarizer_rationale_4",
+      "community": 2,
+      "norm_label": "generates a summary of the transcript."
+    },
+    {
+      "label": "youtube_utils.py",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "core_youtube_utils",
+      "community": 4,
+      "norm_label": "youtube_utils.py"
+    },
+    {
+      "label": "extract_youtube_id()",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L8",
+      "_origin": "ast",
+      "id": "core_youtube_utils_extract_youtube_id",
+      "community": 4,
+      "norm_label": "extract_youtube_id()"
+    },
+    {
+      "label": "get_transcript()",
+      "file_type": "code",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "core_youtube_utils_get_transcript",
+      "community": 4,
+      "norm_label": "get_transcript()"
+    },
+    {
+      "label": "llm.py",
+      "file_type": "code",
+      "source_file": "models/llm.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "models_llm",
+      "community": 2,
+      "norm_label": "llm.py"
+    },
+    {
+      "label": "callbacks.py",
+      "file_type": "code",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ui_callbacks",
+      "community": 2,
+      "norm_label": "callbacks.py"
+    },
+    {
+      "label": "handle_all_events()",
+      "file_type": "code",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "ui_callbacks_handle_all_events",
+      "community": 4,
+      "norm_label": "handle_all_events()"
+    },
+    {
+      "label": "display.py",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ui_display",
+      "community": 0,
+      "norm_label": "display.py"
+    },
+    {
+      "label": "message_alignment_style()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "ui_display_message_alignment_style",
+      "community": 0,
+      "norm_label": "message_alignment_style()"
+    },
+    {
+      "label": "show_history()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "ui_display_show_history",
+      "community": 0,
+      "norm_label": "show_history()"
+    },
+    {
+      "label": "show_context_chunks()",
+      "file_type": "code",
+      "source_file": "ui/display.py",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "ui_display_show_context_chunks",
+      "community": 0,
+      "norm_label": "show_context_chunks()"
+    },
+    {
+      "label": "Injects custom CSS for chat message alignment and styling,     with support for",
+      "file_type": "rationale",
+      "source_file": "ui/display.py",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "ui_display_rationale_5",
+      "community": 0,
+      "norm_label": "injects custom css for chat message alignment and styling,     with support for"
+    },
+    {
+      "label": "Displays the chat history with right-left alignment for user and AI messages.",
+      "file_type": "rationale",
+      "source_file": "ui/display.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "ui_display_rationale_52",
+      "community": 0,
+      "norm_label": "displays the chat history with right-left alignment for user and ai messages."
+    },
+    {
+      "label": "layout.py",
+      "file_type": "code",
+      "source_file": "ui/layout.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "ui_layout",
+      "community": 3,
+      "norm_label": "layout.py"
+    },
+    {
+      "label": "build_layout()",
+      "file_type": "code",
+      "source_file": "ui/layout.py",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "ui_layout_build_layout",
+      "community": 3,
+      "norm_label": "build_layout()"
+    },
+    {
+      "label": "VidWise-AI",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_vidwise_ai",
+      "community": 5,
+      "norm_label": "vidwise-ai"
+    },
+    {
+      "label": "Retrieval-Augmented Generation (RAG)",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_rag",
+      "community": 5,
+      "norm_label": "retrieval-augmented generation (rag)"
+    },
+    {
+      "label": "LangChain",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_langchain",
+      "community": 9,
+      "norm_label": "langchain"
+    },
+    {
+      "label": "Streamlit",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_streamlit",
+      "community": 10,
+      "norm_label": "streamlit"
+    },
+    {
+      "label": "FAISS",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_faiss",
+      "community": 7,
+      "norm_label": "faiss"
+    },
+    {
+      "label": "Gemini",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_gemini",
+      "community": 8,
+      "norm_label": "gemini"
+    },
+    {
+      "label": "youtube-transcript-api",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_youtube_transcript_api",
+      "community": 11,
+      "norm_label": "youtube-transcript-api"
+    },
+    {
+      "label": "Rishet Mehra",
+      "file_type": "concept",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_readme_rishet_mehra",
+      "community": 5,
+      "norm_label": "rishet mehra"
+    },
+    {
+      "label": "streamlit",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_streamlit",
+      "community": 10,
+      "norm_label": "streamlit"
+    },
+    {
+      "label": "langchain",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_langchain",
+      "community": 9,
+      "norm_label": "langchain"
+    },
+    {
+      "label": "faiss-cpu",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_faiss_cpu",
+      "community": 7,
+      "norm_label": "faiss-cpu"
+    },
+    {
+      "label": "youtube-transcript-api",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_youtube_transcript_api",
+      "community": 11,
+      "norm_label": "youtube-transcript-api"
+    },
+    {
+      "label": "google-generativeai",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_google_generativeai",
+      "community": 8,
+      "norm_label": "google-generativeai"
+    },
+    {
+      "label": "langchain-google-genai",
+      "file_type": "concept",
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "vidwise_ai_requirements_langchain_google_genai",
+      "community": 12,
+      "norm_label": "langchain-google-genai"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "app",
+      "target": "app_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app",
+      "target": "ui_callbacks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app",
+      "target": "ui_callbacks_handle_all_events",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app",
+      "target": "ui_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "app",
+      "target": "ui_layout_build_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_main",
+      "target": "ui_callbacks_handle_all_events",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "app_main",
+      "target": "ui_layout_build_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/embeddings.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "core_embeddings",
+      "target": "core_embeddings_create_embeddings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_embeddings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_embeddings_create_embeddings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_embeddings_create_embeddings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_build_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_generate_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_retrieve_documents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "core_rag_pipeline",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "core_rag_pipeline",
+      "target": "models_llm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_rag_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_retrieve_documents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_build_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "core/rag_pipeline.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "core_rag_pipeline_run_rag_chain",
+      "target": "core_rag_pipeline_generate_response",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_rag_pipeline_run_rag_chain",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "core_summarizer",
+      "target": "core_summarizer_generate_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "core_summarizer",
+      "target": "models_llm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_summarizer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "core/summarizer.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "core_summarizer_rationale_4",
+      "target": "core_summarizer_generate_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_summarizer_generate_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_summarizer_generate_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "core_youtube_utils",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "core/youtube_utils.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "core_youtube_utils",
+      "target": "core_youtube_utils_get_transcript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_youtube_utils_extract_youtube_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "core_youtube_utils_get_transcript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "core_youtube_utils_get_transcript",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "models_llm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "ui_callbacks_handle_all_events",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "ui_display",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "ui_display_show_context_chunks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "ui_callbacks",
+      "target": "ui_display_show_history",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/callbacks.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "ui_callbacks_handle_all_events",
+      "target": "ui_display_show_history",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "ui_display",
+      "target": "ui_display_message_alignment_style",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "ui_display",
+      "target": "ui_display_show_context_chunks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "ui_display",
+      "target": "ui_display_show_history",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "ui_display_rationale_5",
+      "target": "ui_display_message_alignment_style",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "ui_display_show_history",
+      "target": "ui_display_message_alignment_style",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/display.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "ui_display_rationale_52",
+      "target": "ui_display_show_history",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ui/layout.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "ui_layout",
+      "target": "ui_layout_build_layout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_rishet_mehra",
+      "target": "vidwise_ai_readme_vidwise_ai"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_faiss"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_gemini"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_langchain"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_rag"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_streamlit"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_vidwise_ai",
+      "target": "vidwise_ai_readme_youtube_transcript_api"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_langchain",
+      "target": "vidwise_ai_requirements_langchain"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_streamlit",
+      "target": "vidwise_ai_requirements_streamlit"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_faiss",
+      "target": "vidwise_ai_requirements_faiss_cpu"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_gemini",
+      "target": "vidwise_ai_requirements_google_generativeai"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "requirements.txt",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "vidwise_ai_readme_youtube_transcript_api",
+      "target": "vidwise_ai_requirements_youtube_transcript_api"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "vidwise_ai_core_technologies",
+      "label": "VidWise-AI Core Technologies",
+      "nodes": [
+        "vidwise_ai_readme_langchain",
+        "vidwise_ai_readme_streamlit",
+        "vidwise_ai_readme_faiss",
+        "vidwise_ai_readme_gemini",
+        "vidwise_ai_readme_youtube_transcript_api"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "README.md"
+    },
+    {
+      "id": "vidwise_ai_required_packages",
+      "label": "Required Packages",
+      "nodes": [
+        "vidwise_ai_requirements_langchain",
+        "vidwise_ai_requirements_streamlit",
+        "vidwise_ai_requirements_faiss_cpu",
+        "vidwise_ai_requirements_google_generativeai",
+        "vidwise_ai_requirements_youtube_transcript_api"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "requirements.txt"
+    }
+  ],
+  "built_at_commit": "cbfb82a0cef002e68cbd8c0b453e52431c2d8170"
+}
