@@ -1,137 +1,90 @@
-<h1 align="center">VidWise-AI 🎥🧠</h1>
-
-<p align="center">
-  <b>Ask Questions. Get Answers. From Any YouTube Video.</b><br>
-  An AI-powered assistant that deeply understands YouTube content using RAG, embeddings, and reranking — built with LangChain, Gemini, FAISS & Streamlit.
-</p>
-
-<p align="center">
-  <a href="#"><img alt="Python" src="https://img.shields.io/badge/Python-3.10-blue"></a>
-  <a href="#"><img alt="License" src="https://img.shields.io/badge/License-MIT-green"></a>
-  <a href="#"><img alt="Streamlit" src="https://img.shields.io/badge/UI-Streamlit-orange"></a>
-  <a href="#"><img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen"></a>
-</p>
-
+---
+title: VidWise
+emoji: 🎥
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
 ---
 
-## 🧠 What is VidWise-AI?
+# VidWise
 
-**VidWise-AI** is your intelligent YouTube video assistant. Just paste a video URL, and instantly:
-- Extract transcript
-- Convert into semantic chunks
-- Perform similarity search with your question
-- Rerank and compress context
-- Generate an accurate, grounded answer
+Multi-video YouTube research with claim-level, second-level citations. Add up to six videos, ask a cross-video question, and inspect the exact transcript evidence behind every answer claim.
 
-It uses **advanced Retrieval-Augmented Generation (RAG)** and state-of-the-art reranking/compression methods to ensure contextually relevant results.
+> Deployment link and 15-second demo will be added only after the Docker HF Space passes a cold-browser test.
 
----
+## What is implemented
 
-## 🚀 Key Features
+- Supadata-first timestamped transcripts, permanent cache, and SRT/VTT/JSON/TXT upload fallback
+- Direct FAISS search with plain-Python multi-query expansion and conditional Gemini listwise reranking
+- A hard maximum of three `gemini-2.5-flash` calls per question
+- Merged metadata-preserving indexes for 1–6 videos, public playlist import, and topic discovery
+- Claim citations linking to `youtube.com/watch?v=…&t=Ns`, with expandable evidence
+- Reproducible evaluation CLI that refuses unverified human labels
+- Docker HF Space runtime, cold-start UX, daily budgets, 429 backoff, and metadata-only locked logs
+- MCP tools for ingestion, corpus search, and topic research
 
-✅ YouTube Transcript Extraction  
-✅ HuggingFace or Gemini Embeddings  
-✅ FAISS Vector Search  
-✅ MultiQuery Reranking & Compression  
-✅ Real-Time Q&A  
-✅ Streamlit Frontend Interface
-
----
-
-## 🛠️ Built With
-
-| Tech | Usage |
-|------|-------|
-| 🐍 Python | Core language |
-| 🎯 FAISS | Semantic vector search |
-| 🧠 HuggingFace / Google Generative AI | Embedding generation |
-| 🧩 LangChain | RAG pipeline, compression, reranking |
-| 🎥 youtube-transcript-api | Extract YouTube captions |
-| 🖼️ Streamlit | Web UI frontend |
-
----
-
-## 📸 Screenshots
-
-> _Coming soon_ 
-
----
-
-## ⚙️ Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Rishet11/VidWise-AI.git
-cd VidWise-AI
+```mermaid
+flowchart LR
+  U[URLs / playlist / topic / subtitle upload] --> C{Permanent cache}
+  C -->|miss| S[Supadata native captions]
+  C --> T[Timestamped chunks]
+  S --> T
+  T --> F[Direct FAISS index]
+  Q[Question] --> E[One-call query expansion]
+  E --> F
+  F --> R{8+ candidates?}
+  R -->|yes| L[One-call listwise rerank]
+  R -->|no| A[Answer]
+  L --> A[One-call structured answer]
+  A --> X[Claims + timestamp links + evidence]
 ```
 
-### 2. Create & Activate Virtual Environment
+## Run locally
+
+Python 3.11 is the supported runtime.
 
 ```bash
-python -m venv venv
-source venv/bin/activate   # For Windows: venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
-```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 4. Run the App
-
-```bash
+cp .env.example .env
 streamlit run app.py
 ```
 
----
+Required secrets are `GOOGLE_API_KEY` and, for fresh live transcripts, `SUPADATA_API_KEY`. `YOUTUBE_API_KEY` enables playlist and topic discovery. The upload path works without Supadata. Never enable billing merely to run this near-zero-spend MVP.
 
-## 💻 Demo (Coming Soon)
-
-> Live demo will be available on **Streamlit Cloud** or **Hugging Face Spaces**  
-> _Want help deploying? Let me know._
-
----
-
-## 📦 Directory Structure
+## Verify and deploy
 
 ```bash
-VidWise-AI/
-├── app.py                    # Streamlit frontend
-├── backend/                  # Logic modules (retriever, QA, compression)
-├── requirements.txt
-├── .gitignore
-└── README.md
+pytest -q
+docker build -t vidwise .
+docker run --rm -p 7860:7860 --env-file .env vidwise
 ```
 
----
+Create a Docker-based Hugging Face Space and add secrets in Space settings. Free hardware sleeps; a cold start can take 2–3 minutes. The current design is intentionally single-worker, and ephemeral cache/log files may be lost after a Space restart.
 
-## 🧠 Future Roadmap
+## Evaluation set
 
-- [ ] Add summarization feature
-- [ ] Multimodal input support (video + audio + thumbnail)
-- [ ] LangSmith/RAGAS Evaluation metrics
-- [ ] Real-time chunk updating as transcript evolves
-- [ ] Host publicly
+The evaluation set begins with 15 questions, including three negatives, and expands to 25–40 after the core loop is validated. Ground truth must be personally checked against public-video timestamps. The runner fails closed while labels are pending:
 
----
+```bash
+python3 benchmarks/run_eval.py --model gemini-2.5-flash --config all --runs 3
+inspect eval benchmarks/inspect_task
+```
 
-## 👨‍💻 Author
+See [protocol](benchmarks/PROTOCOL.md), [results and failure analysis](benchmarks/RESULTS.md), and [methodology](docs/METHODOLOGY.md). No metric is presented until reproduced from a versioned run artifact.
 
-**Rishet Mehra**  
-🧑‍🎓 B.Tech, Mathematics & Computing, DTU  
-🚀 Co-head @ E-Cell DTU | AI/ML, Backend & Automation Enthusiast  
-📫 [Email](mailto:rishetmehra11@gmail.com) | [LinkedIn](https://linkedin.com/in/rishetmehra) | [GitHub](https://github.com/Rishet11)
+## Limits and privacy
 
----
+- 15 questions/session/day and 500 shared questions/day protect free-tier usage.
+- Supadata documents 100 free credits/month; provider-wide remaining credits are not available from the transcript response. Upload remains available when quota is exhausted.
+- Runtime logs contain latency, counts, and a hashed session identifier—not questions, answers, API keys, or raw transcripts.
+- Private, deleted, restricted, and captionless-native videos can fail independently without discarding the rest of the corpus.
+- No full scraped transcript is included in the evaluation set or public dataset.
 
-## 📄 License
+## Repository
 
-This project is licensed under the MIT License — feel free to fork, use, or contribute!
+`core/` contains ingestion, FAISS retrieval, and grounded answers; `benchmarks/` contains evaluation code/data; `docs/CONTEXT.md` is the implementation handoff; `mcp_server.py` exposes the research tools.
 
----
-
-## ⭐️ Support
-
-If you like this project, leave a **star ⭐** on the repo to support it!
+MIT licensed.

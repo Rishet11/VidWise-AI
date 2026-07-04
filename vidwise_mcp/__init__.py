@@ -1,0 +1,1 @@
+"""VidWise MCP server package."""

@@ -12,3 +12,12 @@ env/
 
 
 old_app.py
+logs/*.jsonl
+logs/*.json
+logs/*.lock
+data/transcripts/*.json
+data/discovery-cache.json
+data/*.lock
+benchmarks/runs/
+.pytest_cache/
+.coverage

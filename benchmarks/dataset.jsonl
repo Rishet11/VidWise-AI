@@ -1,0 +1,16 @@
+{"id":"q01","question":"What central problem do the speakers identify?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q02","question":"Which proposed solution appears in at least two videos?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q03","question":"Where do the speakers disagree about implementation?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q04","question":"What evidence is offered for the main recommendation?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q05","question":"What trade-off is repeated across the corpus?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q06","question":"Which concrete examples support the shared conclusion?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q07","question":"How does the advice change by company stage?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q08","question":"Which risks are described and how are they mitigated?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q09","question":"What metrics do the speakers use to judge success?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q10","question":"What sequence of actions is recommended?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"dev"}
+{"id":"q11","question":"Which assumptions underlie the speakers' arguments?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"held_out"}
+{"id":"q12","question":"What limitations do the speakers acknowledge?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":false,"label_status":"needs_rishet_review","split":"held_out"}
+{"id":"q13","question":"What is the exact annual revenue reported for 2035?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":true,"label_status":"needs_rishet_review","split":"held_out"}
+{"id":"q14","question":"Which speaker endorses a product not mentioned in any selected video?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":true,"label_status":"needs_rishet_review","split":"held_out"}
+{"id":"q15","question":"What prediction is made about an unrelated industry?","video_ids":[],"relevant_segments":[],"expected_claims":[],"negative":true,"label_status":"needs_rishet_review","split":"held_out"}
+

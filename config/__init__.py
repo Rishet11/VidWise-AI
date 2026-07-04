@@ -1,0 +1,1 @@
+"""VidWise configuration package."""

@@ -1,0 +1,22 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+      - run: python -m compileall -q app.py core config benchmarks vidwise_mcp mcp_server.py
+      - run: |
+          if rg -n -i 'langchain|gemini-1\.5|except\s*:' --glob '*.py' --glob 'requirements*.txt' .; then
+            exit 1
+          fi
