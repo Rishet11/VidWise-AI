@@ -6,7 +6,7 @@ from typing import Iterable
 
 import numpy as np
 
-from config.settings import EMBEDDING_MODEL_ID
+from config.settings import EMBEDDING_MODEL_ID, EMBEDDING_QUERY_PREFIX
 from core.types import Chunk, Transcript
 
 
@@ -52,8 +52,11 @@ class CorpusIndex:
     index: object
     model: object
 
-    def search(self, query: str, k: int) -> list[tuple[Chunk, float]]:
-        query_vector = self.model.encode([query], normalize_embeddings=True).astype("float32")
+    def search(self, query: str, k: int, use_prefix: bool = True) -> list[tuple[Chunk, float]]:
+        text = EMBEDDING_QUERY_PREFIX + query if use_prefix else query
+        query_vector = self.model.encode(
+            [text], normalize_embeddings=True
+        ).astype("float32")
         scores, ids = self.index.search(query_vector, min(k, len(self.chunks)))
         return [(self.chunks[int(i)], float(score)) for i, score in zip(ids[0], scores[0]) if i >= 0]
 

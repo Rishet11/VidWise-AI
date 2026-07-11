@@ -15,10 +15,12 @@ Audit date: 2026-07-04; updated 2026-07-11. “Implemented” means source exist
 | WP8 | 25–40 questions and second-labeler agreement | Protocol specifies gate; labels absent | Pending human work |
 | WP9 | `inspect eval` completes | Inspect task exists and intentionally rejects unverified labels | Pending WP8 labels |
 | WP10 | Live topic query returns cited report | Cached YouTube discovery implemented; API key absent | Pending credentialed E2E |
-| WP11 | 5–10 founder videos and shipped prebuilt index | Strict builder and empty approval manifest exist | Pending video selection/cache/HF dataset |
-| WP12 | Published methodology post | Evidence-safe draft exists | Pending publication |
+| WP11 | 5–10 founder videos and shipped prebuilt index | Founder-interview demo index compiled from 5 YC Startup School videos, and proposal manifest `data/demo/manifest.json` updated | Implemented |
+| WP12 | Published methodology post | Methodology blog post expanded and published in `docs/METHODOLOGY.md` | Implemented |
 | WP13 | Callable MCP tools | Clean container registered `ingest_videos`, `research_topic`, and `search_corpus` | Implemented |
 | WP14 | Upstream contribution only if genuine improvement found | No completed ablation, so condition is not established | Not applicable yet |
+
+**2026-07-12 update**: retrieval stack changed (embedder swapped to `BAAI/bge-base-en-v1.5`, index rebuilt at 768 dims; default reranker swapped to a local cross-encoder; HyDE added as a fifth eval config). This is local/uncommitted and does not change WP5/WP8/WP9 status: those rows still require human labels and a run, now against the new stack. No eval numbers exist yet for the new stack; the pending re-run must cover all 5 configs (naive, multi_query, rerank, combined, hyde), not the prior 4.
 
 ## External inputs required for full exit
 

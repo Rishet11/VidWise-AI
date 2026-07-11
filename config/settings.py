@@ -15,7 +15,11 @@ LOG_DIR = Path(os.getenv("VIDWISE_LOG_DIR", ROOT / "logs"))
 MODEL_ID = os.getenv("VIDWISE_MODEL", "gemini-3.1-flash-lite")
 EMBEDDING_MODEL_ID = os.getenv(
     "VIDWISE_EMBEDDING_MODEL",
-    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "BAAI/bge-base-en-v1.5",
+)
+EMBEDDING_QUERY_PREFIX = os.getenv(
+    "VIDWISE_EMBEDDING_QUERY_PREFIX",
+    "Represent this sentence for searching relevant passages: ",
 )
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "")
 SUPADATA_API_KEY = os.getenv("SUPADATA_API_KEY", "")
@@ -31,6 +35,7 @@ MAX_LLM_CALLS_PER_QUESTION = 3
 RETRIEVAL_K = 12
 RERANK_THRESHOLD = 8
 FINAL_K = 6
+RERANKER_MODEL_ID = os.getenv("VIDWISE_RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
 
 SUPADATA_URL = "https://api.supadata.ai/v1/transcript"
 SUPADATA_MONTHLY_FREE_CREDITS = 100

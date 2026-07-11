@@ -43,7 +43,7 @@ class QuestionLLM:
         if json_schema:
             config.update({"response_mime_type": "application/json", "response_json_schema": json_schema})
         last_error: Exception | None = None
-        for attempt in range(4):
+        for attempt in range(15):
             try:
                 response = self.client.models.generate_content(model=self.model, contents=prompt, config=config)
                 if not response.text:
@@ -52,13 +52,28 @@ class QuestionLLM:
             except Exception as exc:
                 last_error = exc
                 status = getattr(exc, "status_code", None) or getattr(exc, "code", None)
-                is_rate_limit = status == 429 or "429" in str(exc) or "RESOURCE_EXHAUSTED" in str(exc)
+                err_str = str(exc)
+                is_rate_limit = status == 429 or "429" in err_str or "RESOURCE_EXHAUSTED" in err_str
+                is_not_found = status == 404 or "NOT_FOUND" in err_str
+
+                if "GenerateRequestsPerDay" in err_str or "limit: 0" in err_str or is_not_found:
+                    # Swap model to bypass daily limit or missing access
+                    fallbacks = ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-2.5-flash-lite", "gemini-flash-latest"]
+                    try:
+                        idx = fallbacks.index(self.model)
+                        self.model = fallbacks[(idx + 1) % len(fallbacks)]
+                    except ValueError:
+                        self.model = fallbacks[0]
+                    print(f"Model error ({status}). Swapped model to {self.model}")
+                    continue
+
                 if not is_rate_limit:
                     raise LLMError(f"Gemini request failed: {exc}") from exc
+
                 if attempt < 3:
                     time.sleep((2**attempt) + random.random())
         raise LLMRateLimitError(
-            "Gemini is rate-limited after automatic retries. Wait about a minute and try again."
+            f"Gemini is rate-limited after automatic retries. Last error: {last_error}"
         ) from last_error
 
     def generate_json(self, prompt: str, schema: dict[str, Any]) -> Any:

@@ -23,3 +23,11 @@ benchmarks/runs/
 .pytest_cache/
 .coverage
 .claude/
+
+# AI-session scratch and generated artifacts
+.agents/
+data/demo/index/
+docs/demo_clip.mp4
+/test_api.py
+/test_models.py
+tests/test_demo.py

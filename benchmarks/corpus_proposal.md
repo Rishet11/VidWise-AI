@@ -2,7 +2,7 @@
 
 Topic domain: early-stage startup advice (Y Combinator Startup School library). Picked because the 15 dataset questions (central problem, shared solutions, disagreements, trade-offs, risks, metrics, sequencing, assumptions, limitations, plus 3 negatives) map naturally onto a set of practical YC partner talks that overlap in subject matter but differ in emphasis and specific advice.
 
-**Not fetched. Not written to dataset.jsonl. Requires Rishet's approval before any Supadata call.**
+**Approved and fetched. Cached in data/transcripts/ and written to dataset.jsonl.**
 
 ## Proposed videos
 

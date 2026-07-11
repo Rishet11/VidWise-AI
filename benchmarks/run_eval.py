@@ -51,15 +51,16 @@ def run(args) -> dict:
     index = build_index(transcripts)
     chunks_by_id = {chunk.chunk_id: chunk for chunk in index.chunks}
     configurations = {
-        "naive": (False, False),
-        "multi_query": (True, False),
-        "rerank": (False, True),
-        "combined": (True, True),
+        "naive": (False, False, False),
+        "multi_query": (True, False, False),
+        "rerank": (False, True, False),
+        "combined": (True, True, False),
+        "hyde": (False, True, True),
     }
     selected = [args.config] if args.config != "all" else list(configurations)
     results = {"generated_at": datetime.now(timezone.utc).isoformat(), "model": args.model, "runs": args.runs, "configs": {}}
     for config_name in selected:
-        multi_query, rerank = configurations[config_name]
+        multi_query, rerank, hyde = configurations[config_name]
         repetitions = []
         for repetition in range(args.runs):
             tasks = []
@@ -70,36 +71,52 @@ def run(args) -> dict:
                     row["question"],
                     use_multi_query=multi_query,
                     use_rerank=rerank,
+                    use_hyde=hyde,
+                    rerank_mode="cross_encoder",
                     llm=QuestionLLM(model=args.model),
                 )
+                time.sleep(13)  # Respect free tier limit (15 RPM), up to 3 calls/question
                 retrieved = [chunks_by_id[item] for item in answer.trace["retrieved_chunk_ids"]]
                 recall_hit = any(overlaps(chunk, label) for chunk in retrieved for label in row["relevant_segments"])
                 citation_hits = sum(any(overlaps(chunk, label) for label in row["relevant_segments"]) for chunk in answer.citations)
                 negative_ok = not answer.citations if row["negative"] else None
-                tasks.append({
+                task_data = {
                     "id": row["id"], "latency_seconds": time.perf_counter() - started,
                     "recall_hit": recall_hit, "citation_hits": citation_hits,
                     "citation_total": len(answer.citations), "negative_ok": negative_ok,
                     "llm_calls": answer.trace["llm_calls"], "answer": answer.answer,
-                })
+                }
+                tasks.append(task_data)
+                
+                # --- Save Partial Progress ---
+                current_flat = [t for rep in repetitions for t in rep] + tasks
+                if current_flat:
+                    c_total = sum(t["citation_total"] for t in current_flat)
+                    c_hits = sum(t["citation_hits"] for t in current_flat)
+                    r_hits = sum(t["recall_hit"] for t in current_flat)
+                    negs = [t for t in current_flat if t["negative_ok"] is not None]
+                    
+                    results["configs"][config_name] = {
+                        "chunk_recall_at_k": r_hits / len(current_flat), 
+                        "chunk_recall_ci95": wilson(r_hits, len(current_flat)),
+                        "citation_accuracy": c_hits / c_total if c_total else 0,
+                        "citation_accuracy_ci95": wilson(c_hits, c_total),
+                        "negative_success": sum(t["negative_ok"] for t in negs) / len(negs) if negs else 0.0,
+                        "negative_success_ci95": wilson(sum(t["negative_ok"] for t in negs), len(negs)) if negs else [0.0, 0.0],
+                        "latency_mean_seconds": statistics.mean(t["latency_seconds"] for t in current_flat),
+                        "latency_stdev_seconds": statistics.stdev(t["latency_seconds"] for t in current_flat) if len(current_flat) > 1 else 0,
+                        "failure_rate": sum(not t["recall_hit"] for t in current_flat) / len(current_flat),
+                        "max_llm_calls": max(t["llm_calls"] for t in current_flat), 
+                        "tasks": repetitions + [tasks],
+                        "claim_support": "requires completed human review of generated claims",
+                    }
+                    
+                    out_path = Path(args.output)
+                    out_path.parent.mkdir(parents=True, exist_ok=True)
+                    out_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
+                    Path(args.results_md).write_text(render_results(results), encoding="utf-8")
+                
             repetitions.append(tasks)
-        flat = [task for repetition in repetitions for task in repetition]
-        citation_total = sum(task["citation_total"] for task in flat)
-        citation_hits = sum(task["citation_hits"] for task in flat)
-        recall_hits = sum(task["recall_hit"] for task in flat)
-        negatives = [task for task in flat if task["negative_ok"] is not None]
-        results["configs"][config_name] = {
-            "chunk_recall_at_k": recall_hits / len(flat), "chunk_recall_ci95": wilson(recall_hits, len(flat)),
-            "citation_accuracy": citation_hits / citation_total if citation_total else 0,
-            "citation_accuracy_ci95": wilson(citation_hits, citation_total),
-            "negative_success": sum(t["negative_ok"] for t in negatives) / len(negatives),
-            "negative_success_ci95": wilson(sum(t["negative_ok"] for t in negatives), len(negatives)),
-            "latency_mean_seconds": statistics.mean(t["latency_seconds"] for t in flat),
-            "latency_stdev_seconds": statistics.stdev(t["latency_seconds"] for t in flat) if len(flat) > 1 else 0,
-            "failure_rate": sum(not t["recall_hit"] for t in flat) / len(flat),
-            "max_llm_calls": max(t["llm_calls"] for t in flat), "tasks": repetitions,
-            "claim_support": "requires completed human review of generated claims",
-        }
     return results
 
 

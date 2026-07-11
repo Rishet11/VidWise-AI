@@ -51,7 +51,9 @@ def test_question_uses_at_most_three_calls():
     llm = FakeLLM()
     corpus = chunks(10)
     index = CorpusIndex(corpus, np.ones((10, 2), dtype="float32"), FakeIndex(), FakeModel())
-    result = run_research(index, "question", llm=llm)
+    # Exercise the worst-case LLM-reranker path so this stays a pure unit test
+    # (the cross-encoder default would load a real model from the HF hub).
+    result = run_research(index, "question", llm=llm, rerank_mode="llm")
     assert result.trace["llm_calls"] == 3
     assert "Supported fact" in result.answer
 

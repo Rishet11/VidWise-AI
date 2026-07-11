@@ -48,4 +48,4 @@ python3 scripts/deploy_hf.py --space owner/name --confirm
 
 ## Env vars
 
-GOOGLE_API_KEY, SUPADATA_API_KEY, YOUTUBE_API_KEY (optional), SCRAPERAPI_KEY (legacy local-only), HF_TOKEN (build-time only), VIDWISE_GLOBAL_DAILY_LIMIT (500), VIDWISE_SESSION_DAILY_LIMIT (15)
+GOOGLE_API_KEY, SUPADATA_API_KEY, YOUTUBE_API_KEY (optional), SCRAPERAPI_KEY (legacy local-only), HF_TOKEN (build-time only), VIDWISE_GLOBAL_DAILY_LIMIT (500), VIDWISE_SESSION_DAILY_LIMIT (15), VIDWISE_EMBEDDING_MODEL (optional, default BAAI/bge-base-en-v1.5), VIDWISE_EMBEDDING_QUERY_PREFIX (optional, default is the BGE search-instruction prefix), VIDWISE_RERANKER_MODEL (optional, default cross-encoder/ms-marco-MiniLM-L-6-v2)

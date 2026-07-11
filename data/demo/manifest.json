@@ -1,2 +1,31 @@
-{"status":"awaiting_rishet_selection","videos":[],"policy":"Add 5–10 public founder-interview videos only after checking transcript rights and stability. Do not commit raw transcripts."}
-
+{
+  "status": "approved",
+  "videos": [
+    {
+      "video_id": "DOtCl5PU8F0",
+      "title": "How to Evaluate Startup Ideas",
+      "url": "https://www.youtube.com/watch?v=DOtCl5PU8F0"
+    },
+    {
+      "video_id": "z1iF1c8w5Lg",
+      "title": "How To Talk To Users",
+      "url": "https://www.youtube.com/watch?v=z1iF1c8w5Lg"
+    },
+    {
+      "video_id": "12D8zEdOPYo",
+      "title": "How to Build Products Users Love",
+      "url": "https://www.youtube.com/watch?v=12D8zEdOPYo"
+    },
+    {
+      "video_id": "8pNxKX1SUGE",
+      "title": "All About Pivoting",
+      "url": "https://www.youtube.com/watch?v=8pNxKX1SUGE"
+    },
+    {
+      "video_id": "1hHMwLxN6EM",
+      "title": "How to Plan an MVP",
+      "url": "https://www.youtube.com/watch?v=1hHMwLxN6EM"
+    }
+  ],
+  "policy": "Add 5–10 public founder-interview videos only after checking transcript rights and stability. Do not commit raw transcripts."
+}

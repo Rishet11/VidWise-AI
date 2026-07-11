@@ -71,11 +71,29 @@ Evidence:
     return AnswerResult("\n\n".join(rendered), cited, {})
 
 
-def run_research(index, question: str, *, history=None, use_multi_query=True, use_rerank=True, llm=None) -> AnswerResult:
+def run_research(
+    index,
+    question: str,
+    *,
+    history=None,
+    use_multi_query=True,
+    use_rerank=True,
+    use_hyde=False,
+    rerank_mode="cross_encoder",
+    llm=None,
+) -> AnswerResult:
     from core.retrieval import retrieve
 
     llm = llm or QuestionLLM()
-    chunks, trace = retrieve(index, question, llm, use_multi_query=use_multi_query, use_rerank=use_rerank)
+    chunks, trace = retrieve(
+        index,
+        question,
+        llm,
+        use_multi_query=use_multi_query,
+        use_rerank=use_rerank,
+        use_hyde=use_hyde,
+        rerank_mode=rerank_mode,
+    )
     result = answer_question(question, chunks, llm, history)
     result.trace = {**trace, "llm_calls": llm.calls, "retrieved_chunk_ids": [c.chunk_id for c in chunks]}
     return result

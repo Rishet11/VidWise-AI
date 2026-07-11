@@ -11,7 +11,7 @@ app_port: 7860
 
 Multi-video YouTube research with claim-level, second-level citations. Add up to six videos, ask a cross-video question, and inspect the exact transcript evidence behind every answer claim.
 
-Live demo: https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rishet11-vidwise.hf.space). Evaluation harness complete; human labeling in progress, no metrics published yet.
+Live demo: https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rishet11-vidwise.hf.space). A 15-second demo video is available at [docs/demo_clip.mp4](docs/demo_clip.mp4). Evaluation harness complete; human labeling in progress, no metrics published yet.
 
 - Claim-level, second-accurate citations linking straight to the moment in the video
 - A measured evaluation suite instead of unverified claims about answer quality
@@ -20,8 +20,9 @@ Live demo: https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rish
 ## What is implemented
 
 - Supadata-first timestamped transcripts, permanent cache, and SRT/VTT/JSON/TXT upload fallback
-- Direct FAISS search with plain-Python multi-query expansion and conditional Gemini listwise reranking
-- A hard maximum of three `gemini-2.5-flash` calls per question
+- Direct FAISS search over a `BAAI/bge-base-en-v1.5` embedding index (query-side instruction prefix, no prefix on documents), with plain-Python multi-query expansion and a local cross-encoder reranker (`cross-encoder/ms-marco-MiniLM-L-6-v2`) by default; an LLM listwise reranker is still available via `rerank_mode="llm"`
+- A HyDE retrieval mode (`use_hyde`) for abstract/synthesis questions; eval-only for now, not enabled in the live app
+- A hard maximum of three `gemini-2.5-flash` calls per question, typically two in the app now that reranking runs locally
 - Merged metadata-preserving indexes for 1–6 videos, public playlist import, and topic discovery
 - Claim citations linking to `youtube.com/watch?v=…&t=Ns`, with expandable evidence
 - Reproducible evaluation CLI that refuses unverified human labels
@@ -34,11 +35,11 @@ flowchart LR
   C -->|miss| S[Supadata native captions]
   C --> T[Timestamped chunks]
   S --> T
-  T --> F[Direct FAISS index]
+  T --> F[Direct FAISS index, bge-base-en-v1.5]
   Q[Question] --> E[One-call query expansion]
   E --> F
   F --> R{8+ candidates?}
-  R -->|yes| L[One-call listwise rerank]
+  R -->|yes| L[Local cross-encoder rerank]
   R -->|no| A[Answer]
   L --> A[One-call structured answer]
   A --> X[Claims + timestamp links + evidence]
@@ -58,6 +59,8 @@ streamlit run app.py
 
 Required secrets are `GOOGLE_API_KEY` and, for fresh live transcripts, `SUPADATA_API_KEY`. `YOUTUBE_API_KEY` enables playlist and topic discovery. The upload path works without Supadata. Never enable billing merely to run this near-zero-spend MVP.
 
+Optional retrieval overrides: `VIDWISE_EMBEDDING_MODEL` (default `BAAI/bge-base-en-v1.5`), `VIDWISE_EMBEDDING_QUERY_PREFIX` (default is the BGE search-instruction prefix; set to an empty string when swapping to a non-BGE embedder), `VIDWISE_RERANKER_MODEL` (default `cross-encoder/ms-marco-MiniLM-L-6-v2`).
+
 ## Verify and deploy
 
 ```bash
@@ -76,6 +79,8 @@ The evaluation set begins with 15 questions, including three negatives, and expa
 python3 benchmarks/run_eval.py --model gemini-2.5-flash --config all --runs 3
 inspect eval benchmarks/inspect_task
 ```
+
+Configs: `naive`, `multi_query`, `rerank`, `combined`, `hyde` (5 total). `hyde` is eval-only and not wired into the live app.
 
 See [protocol](benchmarks/PROTOCOL.md), [results and failure analysis](benchmarks/RESULTS.md), and [methodology](docs/METHODOLOGY.md). No metric is presented until reproduced from a versioned run artifact.
 
