@@ -3,7 +3,8 @@
 streamlit==1.47.1
 google-genai==1.25.0
 youtube-transcript-api==1.2.3
-sentence-transformers==5.0.0
+sentence-transformers==5.6.0
+transformers==5.13.1
 torch==2.7.1+cpu
 faiss-cpu==1.11.0
 numpy>=1.26,<2.3
