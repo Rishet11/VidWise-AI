@@ -11,7 +11,11 @@ app_port: 7860
 
 Multi-video YouTube research with claim-level, second-level citations. Add up to six videos, ask a cross-video question, and inspect the exact transcript evidence behind every answer claim.
 
-Live at https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rishet11-vidwise.hf.space). Evaluation harness complete; human labeling in progress, no metrics published yet.
+Live demo: https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rishet11-vidwise.hf.space). Evaluation harness complete; human labeling in progress, no metrics published yet.
+
+- Claim-level, second-accurate citations linking straight to the moment in the video
+- A measured evaluation suite instead of unverified claims about answer quality
+- An MCP server so agents can search and cite these transcripts directly
 
 ## What is implemented
 

@@ -1,8 +1,9 @@
 import json
+from types import SimpleNamespace
 
 import pytest
 
-from core.transcript import TranscriptError, extract_youtube_id, parse_uploaded_transcript
+from core.transcript import TranscriptError, TranscriptQuotaError, extract_youtube_id, fetch_supadata, parse_uploaded_transcript
 
 
 @pytest.mark.parametrize(
@@ -64,3 +65,63 @@ def test_upload_json_supadata_tagged_offset_1500_converted(tmp_path, monkeypatch
     result = parse_uploaded_transcript("clip.json", payload)
     assert result.segments[0].start == 1.5
     assert result.segments[0].duration == 5
+
+
+def test_supadata_402_raises_immediately_without_retry(tmp_path, monkeypatch):
+    monkeypatch.setattr("core.transcript.TRANSCRIPT_CACHE_DIR", tmp_path)
+    calls = []
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        calls.append(url)
+        return SimpleNamespace(status_code=402)
+
+    sleeps = []
+    monkeypatch.setattr("core.transcript.requests.get", fake_get)
+    monkeypatch.setattr("core.transcript.time.sleep", lambda s: sleeps.append(s))
+
+    with pytest.raises(TranscriptQuotaError, match="monthly quota"):
+        fetch_supadata("dQw4w9WgXcQ", api_key="test-key")
+    assert len(calls) == 1
+    assert sleeps == []
+
+
+def test_supadata_429_retries_then_succeeds(tmp_path, monkeypatch):
+    monkeypatch.setattr("core.transcript.TRANSCRIPT_CACHE_DIR", tmp_path)
+    responses = [
+        SimpleNamespace(status_code=429),
+        SimpleNamespace(
+            status_code=200,
+            json=lambda: {
+                "title": "Test video",
+                "content": [{"text": "hello", "offset": 0, "duration": 1000}],
+                "lang": "en",
+            },
+            raise_for_status=lambda: None,
+        ),
+    ]
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        return responses.pop(0)
+
+    sleeps = []
+    monkeypatch.setattr("core.transcript.requests.get", fake_get)
+    monkeypatch.setattr("core.transcript.time.sleep", lambda s: sleeps.append(s))
+
+    transcript = fetch_supadata("dQw4w9WgXcQ", api_key="test-key")
+    assert transcript.segments[0].text == "hello"
+    assert sleeps == [2]
+
+
+def test_supadata_429_exhausted_retries_raises_quota_error(tmp_path, monkeypatch):
+    monkeypatch.setattr("core.transcript.TRANSCRIPT_CACHE_DIR", tmp_path)
+
+    def fake_get(url, headers=None, params=None, timeout=None):
+        return SimpleNamespace(status_code=429)
+
+    sleeps = []
+    monkeypatch.setattr("core.transcript.requests.get", fake_get)
+    monkeypatch.setattr("core.transcript.time.sleep", lambda s: sleeps.append(s))
+
+    with pytest.raises(TranscriptQuotaError, match="rate limited"):
+        fetch_supadata("dQw4w9WgXcQ", api_key="test-key")
+    assert sleeps == [2, 5, 10]

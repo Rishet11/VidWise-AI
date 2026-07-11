@@ -36,7 +36,9 @@ def answer_question(question: str, chunks: list[Chunk], llm: QuestionLLM, histor
     prior = "\n".join(f"{m['role']}: {m['content']}" for m in (history or [])[-4:])
     prompt = f"""You answer research questions using only supplied transcript evidence.
 Write atomic, concise claims. Every factual claim must cite one or more chunk IDs that directly support it.
-If evidence is insufficient, set insufficient=true and return no claims. Never use outside knowledge.
+The first claim must directly answer the question. Subsequent claims support or elaborate on it in logical
+order. Claims must read as connected prose when concatenated, each self-contained, with no near-duplicates
+or filler. If evidence is insufficient, set insufficient=true and return no claims. Never use outside knowledge.
 
 Previous conversation:
 {prior or '(none)'}
@@ -50,19 +52,20 @@ Evidence:
     by_id = {chunk.chunk_id: chunk for chunk in chunks}
     rendered: list[str] = []
     cited: list[Chunk] = []
+    numbers: dict[str, int] = {}
     if payload.get("insufficient") or not payload.get("claims"):
         return AnswerResult("The selected videos do not provide enough evidence to answer that.", [], {})
     for claim in payload["claims"]:
         claim_citations = [by_id[cid] for cid in claim.get("citation_ids", []) if cid in by_id]
         if not claim_citations:
             continue  # unsupported LLM output is never presented as a claim
-        chips = " ".join(
-            f"[{chunk.title} @ {format_timestamp(chunk.start)}]({chunk.citation_url})" for chunk in claim_citations
-        )
-        rendered.append(f"{str(claim['text']).strip()} {chips}")
+        markers = ""
         for chunk in claim_citations:
-            if chunk.chunk_id not in {item.chunk_id for item in cited}:
+            if chunk.chunk_id not in numbers:
+                numbers[chunk.chunk_id] = len(numbers) + 1
                 cited.append(chunk)
+            markers += f"[[{numbers[chunk.chunk_id]}]]({chunk.citation_url})"
+        rendered.append(f"{str(claim['text']).strip()} {markers}")
     if not rendered:
         return AnswerResult("The selected videos do not provide enough supported evidence to answer that.", [], {})
     return AnswerResult("\n\n".join(rendered), cited, {})

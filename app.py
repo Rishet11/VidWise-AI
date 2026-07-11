@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import streamlit as st
 
@@ -15,10 +16,10 @@ from core.transcript import TranscriptError, TranscriptQuotaError, extract_youtu
 from core.types import Transcript
 from core.usage import BudgetReached, consume_question, log_event
 
-st.set_page_config(page_title="VidWise — cited video research", page_icon="🎥", layout="wide")
+st.set_page_config(page_title="VidWise, cited video research", page_icon="🎥", layout="wide")
 
 
-@st.cache_resource(show_spinner="Loading the embedding model (cold starts can take ~2 minutes)…")
+@st.cache_resource(show_spinner="First load takes a minute or two while the app warms up…")
 def cached_embedding_model():
     return get_embedding_model()
 
@@ -47,28 +48,54 @@ def ingest_urls(raw: str):
     if len(entries) > MAX_VIDEOS:
         st.error("Use at most 6 videos per research corpus.")
         return
+
+    video_ids: dict[str, str] = {}
     for entry in entries:
         video_id = extract_youtube_id(entry)
         if not video_id:
             st.warning(f"Skipped invalid YouTube URL: {entry}")
             continue
-        try:
-            with st.spinner(f"Fetching transcript for {video_id}…"):
-                transcript = get_transcript(video_id, allow_local=False)
-            if transcript.source == "supadata":
-                st.session_state.supadata_fetches += 1
-            add_transcript(transcript)
-            st.success(f"Added {transcript.title}")
-        except TranscriptQuotaError as exc:
-            st.warning(str(exc))
-        except TranscriptError as exc:
-            st.warning(f"Skipped {video_id}: {exc}")
+        video_ids[video_id] = entry
+    if not video_ids:
+        return
+
+    total = len(video_ids)
+    done = 0
+    failed = 0
+    with st.status(f"Fetching {total} transcript{'s' if total != 1 else ''}…", expanded=False) as status:
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = {executor.submit(get_transcript, video_id, allow_local=False): video_id for video_id in video_ids}
+            for future in as_completed(futures):
+                video_id = futures[future]
+                done += 1
+                status.update(label=f"Fetched {done}/{total} transcripts")
+                try:
+                    transcript = future.result()
+                    if transcript.source == "supadata":
+                        st.session_state.supadata_fetches += 1
+                    add_transcript(transcript)
+                    st.success(f"Added {transcript.title}")
+                except TranscriptQuotaError as exc:
+                    failed += 1
+                    st.warning(str(exc))
+                except TranscriptError as exc:
+                    failed += 1
+                    st.warning(f"Skipped {video_id}: {exc}")
+        if failed:
+            status.update(
+                label=f"Added {done - failed} of {total} videos ({failed} skipped, open for details)",
+                state="error",
+                expanded=True,
+            )
+        else:
+            status.update(label=f"Fetched {done}/{total} transcripts", state="complete")
 
 
 def render_ingest():
     st.subheader("Build a research corpus")
     urls_tab, upload_tab, discover_tab = st.tabs(["URLs / playlist", "Upload transcript", "Topic discovery"])
     with urls_tab:
+        st.caption("Paste video links or a playlist link. VidWise fetches captions for each video automatically.")
         raw = st.text_area("Paste 3–6 YouTube URLs, one per line", height=120)
         col1, col2 = st.columns(2)
         if col1.button("Add videos", type="primary", use_container_width=True):
@@ -81,6 +108,7 @@ def render_ingest():
             except DiscoveryError as exc:
                 st.warning(str(exc))
     with upload_tab:
+        st.caption("No captions available on YouTube? Upload a transcript file and link it to the video yourself.")
         upload_url = st.text_input("Matching YouTube URL (recommended for citation links)", key="upload_url")
         files = st.file_uploader("Upload SRT, VTT, JSON, or TXT", type=["srt", "vtt", "json", "txt"], accept_multiple_files=True)
         if st.button("Add uploaded transcripts"):
@@ -93,6 +121,7 @@ def render_ingest():
                 except TranscriptError as exc:
                     st.warning(f"{file.name}: {exc}")
     with discover_tab:
+        st.caption("Don't have specific videos in mind? Search a topic and VidWise finds public videos to research.")
         topic = st.text_input("Research topic")
         if st.button("Find up to 6 public videos"):
             try:
@@ -106,6 +135,19 @@ def render_ingest():
             ingest_urls("\n".join(item["url"] for item in st.session_state.discovery))
 
 
+def render_sources(citations: list[dict], trace: dict | None = None):
+    if not citations:
+        return
+    with st.expander(f"Sources ({len(citations)})"):
+        for index, citation in enumerate(citations, start=1):
+            seconds = int(citation.get("start", 0))
+            link = citation.get("url") or f"https://youtu.be/{citation.get('video_id', '')}?t={seconds}"
+            st.markdown(f"**[{index}]** [{citation['timestamp']}]({link}) {citation['title']}")
+            st.caption(f"“{citation['text']}”")
+        if trace:
+            st.caption(f"How this was found: {trace}")
+
+
 def render_chat():
     transcripts = st.session_state.transcripts
     if not transcripts:
@@ -113,15 +155,15 @@ def render_chat():
         return
     st.subheader(f"Research across {len(transcripts)} video{'s' if len(transcripts) != 1 else ''}")
     for transcript in transcripts:
-        st.caption(f"• {transcript.title} — {transcript.source}, {len(transcript.segments)} timestamped segments")
+        st.caption(f"- {transcript.title} ({transcript.source}, {len(transcript.segments)} timestamped segments)")
     serialized = json.dumps([transcript.to_dict() for transcript in transcripts], sort_keys=True)
     index = cached_index(serialized)
+    if not st.session_state.chat:
+        st.caption('Try asking something like: "Where do these videos disagree on X?"')
     for message in st.session_state.chat:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
-            for citation in message.get("citations", []):
-                with st.expander(f"Evidence: {citation['title']} @ {citation['timestamp']}"):
-                    st.write(citation["text"])
+            render_sources(message.get("citations", []), message.get("trace"))
     question = st.chat_input("Ask a question across these videos")
     if not question:
         return
@@ -138,19 +180,23 @@ def render_chat():
         elapsed = time.perf_counter() - started
         result.trace["latency_seconds"] = round(elapsed, 3)
         citations = [
-            {"title": c.title, "timestamp": f"{int(c.start)//60:02d}:{int(c.start)%60:02d}", "text": c.text, "url": c.citation_url}
+            {
+                "title": c.title,
+                "timestamp": f"{int(c.start)//60:02d}:{int(c.start)%60:02d}",
+                "text": c.text,
+                "start": int(c.start),
+                "video_id": c.video_id,
+                "url": f"https://youtu.be/{c.video_id}?t={int(c.start)}",
+            }
             for c in result.citations
         ]
-        message = {"role": "assistant", "content": result.answer, "citations": citations, "trace": result.trace}
+        trace_summary = {**result.trace, "daily_question": counts["session"]}
+        message = {"role": "assistant", "content": result.answer, "citations": citations, "trace": trace_summary}
         st.session_state.chat.append(message)
         log_event("question_answered", st.session_state.session_id, latency_seconds=elapsed, llm_calls=result.trace["llm_calls"], video_count=len(transcripts), citation_count=len(citations))
         with st.chat_message("assistant"):
             st.markdown(result.answer)
-            for citation in citations:
-                with st.expander(f"Evidence: {citation['title']} @ {citation['timestamp']}"):
-                    st.write(citation["text"])
-            with st.expander("Retrieval trace"):
-                st.json({**result.trace, "daily_question": counts["session"]})
+            render_sources(citations, trace_summary)
     except BudgetReached as exc:
         st.warning(str(exc))
     except LLMRateLimitError as exc:
@@ -160,30 +206,21 @@ def render_chat():
         st.error("The AI service is temporarily unavailable or rate-limited. Please retry in a minute.")
 
 
-def render_eval():
-    st.header("Published evaluation set")
-    st.markdown("Results are generated by `python benchmarks/run_eval.py`. No result is shown until a run artifact exists.")
-    try:
-        st.markdown(open("benchmarks/RESULTS.md", encoding="utf-8").read())
-    except OSError:
-        st.info("Evaluation results have not been generated in this deployment.")
-
-
 init_state()
+st.markdown("<style>div.block-container{padding-top:2rem;}</style>", unsafe_allow_html=True)
 st.title("VidWise")
-st.caption("Multi-video YouTube research with second-level, expandable evidence")
-st.info("On a sleeping free-tier Space, the first load can take about 2 minutes while models wake up.")
-research_tab, eval_tab, about_tab = st.tabs(["Research", "Evaluation set", "Privacy & limits"])
+st.caption("Ask questions across YouTube videos and get answers with second-accurate citations.")
+research_tab, about_tab = st.tabs(["Research", "Privacy & limits"])
 with research_tab:
     render_ingest()
     render_chat()
-with eval_tab:
-    render_eval()
 with about_tab:
     st.markdown(
-        f"""Transcripts are cached to avoid repeated provider usage. Runtime logs contain counts, latency, and hashed session IDs—not questions or raw transcripts.
+        """Transcripts are cached to avoid repeated provider usage. Runtime logs contain counts, latency, and hashed session IDs, not questions or raw transcripts.
 
-Supadata's documented free allowance is {SUPADATA_MONTHLY_FREE_CREDITS} credits/month. This session has used {st.session_state.supadata_fetches} fresh API fetches; provider-wide remaining quota is not exposed by its transcript endpoint. Uploading subtitles always remains available.
-
-The free deployment is single-worker and may lose ephemeral logs or caches after a restart. Each session is limited to 15 questions/day; a shared 500-question/day safety cap protects the Gemini free tier."""
+The free deployment is single-worker and may lose ephemeral logs or caches after a restart. Each session is limited to 15 questions per day, and a shared 500-question daily cap protects the Gemini free tier."""
+    )
+    st.caption(
+        f"Supadata's documented free allowance is {SUPADATA_MONTHLY_FREE_CREDITS} credits/month. "
+        f"This session has used {st.session_state.supadata_fetches} fresh API fetches. Uploading subtitles always remains available."
     )

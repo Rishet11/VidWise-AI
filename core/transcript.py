@@ -104,11 +104,25 @@ def fetch_supadata(video_id: str, api_key: str = SUPADATA_API_KEY) -> Transcript
     if not api_key:
         raise TranscriptError("SUPADATA_API_KEY is not configured")
     headers = {"x-api-key": api_key}
-    params = {"url": canonical_url(video_id), "text": "false", "mode": "native"}
+    base_params = {"url": canonical_url(video_id), "text": "false", "mode": "native"}
+    # Prefer English captions; fall back to whatever is available if none are found.
+    params = {**base_params, "lang": "en"}
     try:
         response = requests.get(SUPADATA_URL, headers=headers, params=params, timeout=45)
-        if response.status_code in {402, 429}:
-            raise TranscriptQuotaError("Supadata quota or rate limit reached; upload a transcript file instead")
+        if response.status_code == 402:
+            raise TranscriptQuotaError("Supadata monthly quota reached; upload a transcript file instead")
+        if response.status_code == 429:
+            for delay in (2, 5, 10):
+                time.sleep(delay)
+                response = requests.get(SUPADATA_URL, headers=headers, params=params, timeout=45)
+                if response.status_code != 429:
+                    break
+            if response.status_code == 429:
+                raise TranscriptQuotaError(
+                    "Supadata rate limited this video; wait a minute and retry, or upload a transcript file"
+                )
+            if response.status_code == 402:
+                raise TranscriptQuotaError("Supadata monthly quota reached; upload a transcript file instead")
         if response.status_code in {403, 404}:
             raise TranscriptError("Video is private, restricted, deleted, or has no native transcript")
         response.raise_for_status()
@@ -127,11 +141,23 @@ def fetch_supadata(video_id: str, api_key: str = SUPADATA_API_KEY) -> Transcript
                 raise TranscriptError("Supadata transcript job did not finish in time; retry shortly")
     except requests.RequestException as exc:
         raise TranscriptError(f"Supadata request failed: {exc}") from exc
+    segments = _segments_from_supadata(payload.get("content"))
+    if not segments and params.get("lang"):
+        # The English-only request found nothing; retry once without the language pin.
+        try:
+            fallback = requests.get(SUPADATA_URL, headers=headers, params=base_params, timeout=45)
+            fallback.raise_for_status()
+            fb_payload = fallback.json()
+            if not (fb_payload.get("jobId") or fallback.status_code == 202):
+                payload = fb_payload
+                segments = _segments_from_supadata(payload.get("content"))
+        except requests.RequestException:
+            pass
     transcript = Transcript(
         video_id=video_id,
         title=str(payload.get("title") or _public_title(video_id)),
         url=canonical_url(video_id),
-        segments=_segments_from_supadata(payload.get("content")),
+        segments=segments,
         source="supadata",
         language=payload.get("lang"),
     )

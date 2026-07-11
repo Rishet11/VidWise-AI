@@ -22,3 +22,4 @@ data/*.lock
 benchmarks/runs/
 .pytest_cache/
 .coverage
+.claude/
