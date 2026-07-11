@@ -1,13 +1,13 @@
 # PLAN v5 (FINAL) — VidWise: multi-video YouTube research with second-level citations
-*Handoff document for ChatGPT Codex. Implement exactly this; where reality contradicts an assumption, record the finding in `docs/CONTEXT.md` and adapt, don't silently deviate. Claude Fable = orchestrator/reviewer; Codex = implementer.*
+*Binding implementation plan.*
 
 ## 1. Purpose & audience
-Rishet Mehra (pre-final-year B.Tech, DTU 2027, Delhi, remote) needs ONE deployed project that impresses YC founders, startup CTOs, and frontier-lab engineers for internship applications. Panel-reviewed conclusion: the app demonstrates shipping; the **hand-labelled evaluation set with honest failure analysis** is the differentiator all three audiences ranked above the app itself. Outreach files: `/Users/rishetmehra/Desktop/Findinternships/` — update bullets ONLY with measured numbers.
+A portfolio project demonstrating multi-video research with verifiable citations and an honestly labelled evaluation set. The app demonstrates shipping; the **hand-labelled evaluation set with honest failure analysis** is a key differentiator for technical audiences.
 
 ## 2. Product (plain words)
 User supplies 3-6 YouTube videos (Phase 2: types a topic and the app finds videos) → ask research questions across all of them → every claim in the answer carries a citation chip `[video title @ mm:ss]` linking to `youtube.com/watch?v=ID&t=Ns`, with the quoted transcript snippet expandable so the user can verify without leaving the page. An Eval tab shows the published evaluation results and failure analysis. Verified July 2026: no competing tool does multi-video research with second-level citations (checked repeatedly, incl. last-60-days launches).
 
-## 3. Current repo state (`/Users/rishetmehra/Desktop/vidwise-ai`, audited 2026-07-04)
+## 3. Current repo state (audited 2026-07-04)
 ~400-line Streamlit app, single-video: `app.py`; `core/{youtube_utils,embeddings,rag_pipeline,summarizer}.py`; `ui/{layout,display,callbacks}.py`; `models/llm.py`; `config/secrets.py`. Uses youtube-transcript-api (+ScraperAPI proxy), RecursiveCharacterTextSplitter(500/100), FAISS, `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, MultiQueryRetriever + LLMListwiseRerank + ContextualCompressionRetriever (via now-legacy `langchain_classic` imports), `gemini-1.5-flash` (obsolete). Known debt: bare `except: pass` and a key-leaking print in `core/youtube_utils.py` (~lines 55-59); no tests; no deployment.
 
 ## 4. Binding architecture decisions (from three rounds of external review — do not relitigate without new evidence)
@@ -54,7 +54,7 @@ logs/        # runtime JSONL (gitignored)
 - **WP4 Citations.** Claim-level chips `[title @ mm:ss]` → `&t=Ns`; expandable quoted snippet; a claim may only cite a chunk whose text supports it. Done when: manual spot-check of 10 answers shows every chip lands within the cited segment.
 - **WP5 Evaluation set v1 (15 questions, then expand).** Fixed public 4-6 videos; 15 questions incl. ≥3 negatives; `PROTOCOL.md` (who labelled, what counts as relevant segment); dataset as versioned JSONL; CLI harness (`run_eval.py --model --config`, JSON out, pinned prompts/seeds); metrics: chunk recall@k, claim-support %, citation accuracy, latency vs stated budget (target: <20s/question warm), failure rate; CIs on all rates; ablation naive vs multi-query+rerank, ≥3 runs, variance reported — winner ships as default config. RESULTS.md LEADS with failure analysis (named mechanism per failure mode). LLM-judge assists; judge-vs-human correlation reported. Done when: `python benchmarks/run_eval.py` reproduces RESULTS.md from scratch.
 - **WP6 Deploy + instrument.** Docker HF Space; caps/backoff from §4.2; wake-up UX; logging with disclosure; quota-state UI. Done when: a stranger's browser completes the full flow on the live URL (cold start included) without seeing a stack trace under any tested failure (bad URL, no transcript, quota hit, 429).
-- **WP7 Launch.** README as product page (live link, mermaid architecture diagram, eval table, limitations incl. cold start + concurrency); 15-sec demo clip; posts (X/LinkedIn/r/LangChain/HN); onboard ≥10 real users; capture metrics. Done when: ≥10 distinct real users logged and Findinternships bullets updated with measured numbers.
+- **WP7 Launch.** README as product page (live link, mermaid architecture diagram, eval table, limitations incl. cold start + concurrency); 15-sec demo clip; posts (X/LinkedIn/r/LangChain/HN); onboard ≥10 real users; capture metrics. Done when: ≥10 distinct real users logged and outreach metrics captured with measured numbers.
 
 ### Phase 1.5 — Eval hardening (after core loop proven with users)
 - **WP8 Expand evaluation set** to 25-40 questions; second-labeler pass on ≥10-question subset, report agreement (if raw overlap <70%, adjudicate disagreements and revise PROTOCOL.md before shipping); dev/held-out split if any tuning occurred. Done when: RESULTS.md v2 published with agreement stats.

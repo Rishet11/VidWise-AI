@@ -7,7 +7,7 @@ VidWise researches up to six YouTube videos and returns only transcript-supporte
 The repository began as a single-video LangChain chatbot. On 2026-07-04 it pivoted to direct-SDK multi-video research with second-level citations and a reproducible evaluation set.
 
 ## Current phase
-Repository implementation pass complete through the locally actionable portions of WP13. The requirement-level status is in `docs/COMPLETION_AUDIT.md`. External measurement/publication criteria remain unverified until executed with credentials and human participants.
+Deployed 2026-07-11 to https://rishet11-vidwise.hf.space. Local E2E verified (1 video, real Gemini answer, timestamped citation links, 2/3 LLM calls used). All API keys set in local .env. Remaining work: human label assignment and completion, citation spot-check over evaluation set, demo clip production, launch posts, and real-user onboarding.
 
 ## Decisions and findings
 
@@ -43,23 +43,23 @@ Added cached YouTube Data API topic search and playlist imports with a persisten
 ### WP11–WP13 — expansion artifacts
 Added a strict 5–10-video demo index builder and approval manifest, an evidence-safe methodology draft, launch/demo scripts, and FastMCP tools (`ingest_videos`, `search_corpus`, `research_topic`) under the non-conflicting `vidwise_mcp` package. No public corpus/article is claimed.
 
-## Executed proof (2026-07-04)
+## Executed proof (2026-07-04 local, 2026-07-11 deployed)
 
-- host `pytest -q` and clean-image `pytest -q` → 18 passed.
+- host `pytest -q` and clean-image `pytest -q` → 20 passed (2026-07-11).
 - `python3 -m compileall -q app.py core config benchmarks mcp tests` → exit 0.
 - legacy scan for LangChain, Gemini 1.5, and bare `except:` → no matches.
 - `git diff --check` → exit 0.
-- `docker build -t vidwise:test .` → success (final image `8c147910df0f`) with Python 3.11 and CPU-only Torch.
+- `docker build -t vidwise:test .` → success with Python 3.11 and CPU-only Torch.
 - clean container `/_stcore/health` → `ok`; Streamlit started on port 7860 without secrets.
 - clean container MCP registry → `ingest_videos`, `research_topic`, `search_corpus`.
 - `python3 benchmarks/run_eval.py` → expected fail-closed error naming all 15 unverified rows.
-- Environment presence audit → Google, Supadata, YouTube, and HF credentials all missing.
+- Environment presence audit (2026-07-11) → Google, Supadata, YouTube, and HF credentials all set in local .env.
 
-## Risks and remaining proof
+## Remaining work (2026-07-11)
 
-- Need `SUPADATA_API_KEY` and an HF Space to measure T1/T3 over ≥20 varied videos.
-- Need `GOOGLE_API_KEY` for real-video end-to-end latency/call evidence.
-- Need Rishet to label evaluation questions; a second person must label the overlap.
-- Need HF credentials/Space identity and explicit authorization to deploy externally.
-- Need real outreach and ten users before updating `/Users/rishetmehra/Desktop/Findinternships/`.
-- A demo video, public posts, and a methodology publication are external artifacts, not safe to invent.
+- Rishet to assign labels for evaluation questions; a second person must label the overlap set.
+- Citation evidence spot-check over 10 top evaluation results to verify link landing accuracy.
+- Demo clip production (15-30 seconds, showing question-to-answer cross-video flow).
+- Launch posts to relevant channels and announcement timing.
+- Outreach to real users and consent collection for production feedback.
+- Methodology publication and external article/blog post.
