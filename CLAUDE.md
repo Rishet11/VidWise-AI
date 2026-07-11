@@ -27,7 +27,7 @@ python3 scripts/deploy_hf.py --space owner/name --confirm
 ## Constraints
 
 - Python 3.11; no LangChain packages or imports.
-- Gemini: `google-genai` SDK, stable `gemini-2.5-flash` (never preview/latest alias).
+- Gemini: `google-genai` SDK, stable `gemini-3.1-flash-lite` (never preview/latest alias). `gemini-2.5-flash` is 404 for this API key as of 2026-07-11; do not revert to it without confirming access.
 - Max 3 LLM calls per question; 6 videos max.
 - Transcripts: permanent cache, then Supadata captions, then optional youtube-transcript-api. User upload always available. Keep timestamps and video metadata on every chunk.
 - Never log questions, answers, API keys, or raw transcripts. Do not publish transcript corpora.

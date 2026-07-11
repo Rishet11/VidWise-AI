@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = Path(os.getenv("VIDWISE_DATA_DIR", ROOT / "data"))
 TRANSCRIPT_CACHE_DIR = DATA_DIR / "transcripts"
 LOG_DIR = Path(os.getenv("VIDWISE_LOG_DIR", ROOT / "logs"))
-MODEL_ID = os.getenv("VIDWISE_MODEL", "gemini-2.5-flash")
+MODEL_ID = os.getenv("VIDWISE_MODEL", "gemini-3.1-flash-lite")
 EMBEDDING_MODEL_ID = os.getenv(
     "VIDWISE_EMBEDDING_MODEL",
     "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
