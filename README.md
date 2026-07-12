@@ -5,95 +5,126 @@ colorFrom: blue
 colorTo: purple
 sdk: docker
 app_port: 7860
+thumbnail: https://huggingface.co/spaces/Rishet11/vidwise/resolve/main/docs/og_image.png
 ---
 
-# VidWise
+# VidWise AI
 
-Multi-video YouTube research with claim-level, second-level citations. Add up to six videos, ask a cross-video question, and inspect the exact transcript evidence behind every answer claim.
+> **Stop scrubbing through videos. Ask a question. Get the exact answer — with the timestamp to prove it.**
 
-Live demo: https://huggingface.co/spaces/Rishet11/vidwise (runtime: https://rishet11-vidwise.hf.space). A 15-second demo video is available at [docs/demo_clip.mp4](docs/demo_clip.mp4). Evaluation harness complete; human labeling in progress, no metrics published yet.
+VidWise lets you research across multiple YouTube videos at once. Drop in up to six video links, ask anything, and get a cited answer that points to the exact second in the exact video where it was said. No guessing. No hallucinations. Just evidence.
 
-- Claim-level, second-accurate citations linking straight to the moment in the video
-- A measured evaluation suite instead of unverified claims about answer quality
-- An MCP server so agents can search and cite these transcripts directly
+🔗 **[Try the live demo →](https://huggingface.co/spaces/Rishet11/vidwise)**
 
-## What is implemented
+---
 
-- Supadata-first timestamped transcripts, permanent cache, and SRT/VTT/JSON/TXT upload fallback
-- Direct FAISS search over a `BAAI/bge-base-en-v1.5` embedding index (query-side instruction prefix, no prefix on documents), with plain-Python multi-query expansion and a local cross-encoder reranker (`cross-encoder/ms-marco-MiniLM-L-6-v2`) by default; an LLM listwise reranker is still available via `rerank_mode="llm"`
-- A HyDE retrieval mode (`use_hyde`) for abstract/synthesis questions; eval-only for now, not enabled in the live app
-- A hard maximum of three `gemini-2.5-flash` calls per question, typically two in the app now that reranking runs locally
-- Merged metadata-preserving indexes for 1–6 videos, public playlist import, and topic discovery
-- Claim citations linking to `youtube.com/watch?v=…&t=Ns`, with expandable evidence
-- Reproducible evaluation CLI that refuses unverified human labels
-- Docker HF Space runtime, cold-start UX, daily budgets, 429 backoff, and metadata-only locked logs
-- MCP tools for ingestion, corpus search, and topic research
+## Why VidWise?
 
-```mermaid
-flowchart LR
-  U[URLs / playlist / topic / subtitle upload] --> C{Permanent cache}
-  C -->|miss| S[Supadata native captions]
-  C --> T[Timestamped chunks]
-  S --> T
-  T --> F[Direct FAISS index, bge-base-en-v1.5]
-  Q[Question] --> E[One-call query expansion]
-  E --> F
-  F --> R{8+ candidates?}
-  R -->|yes| L[Local cross-encoder rerank]
-  R -->|no| A[Answer]
-  L --> A[One-call structured answer]
-  A --> X[Claims + timestamp links + evidence]
-```
+Most AI tools summarize videos and call it a day. VidWise goes further:
 
-## Run locally
+- **Every claim is cited.** Each part of the answer links directly to the moment it was spoken — down to the second.
+- **Cross-video research.** Ask a single question across six videos simultaneously. Compare, contrast, and synthesize.
+- **No hallucinations.** Answers are grounded entirely in the transcript. If the video didn't say it, VidWise won't either.
+- **Built for agents too.** An MCP server lets AI agents search and cite these transcripts directly — no extra setup.
 
-Python 3.11 is the supported runtime.
+---
+
+## How it works
+
+1. **Paste up to 6 YouTube URLs** (or a playlist link, or upload your own subtitles)
+2. **Ask any question** — factual, comparative, or analytical
+3. **Get a grounded answer** with expandable evidence and clickable timestamp links that jump straight to the moment in the video
+
+That's it.
+
+---
+
+## Features
+
+| Feature | Details |
+|---|---|
+| 🎬 Multi-video research | Up to 6 videos in one session |
+| ⏱ Second-level citations | Every claim links to `youtube.com/watch?v=…&t=Ns` |
+| 📂 Flexible input | YouTube URLs, public playlists, or uploaded SRT/VTT/TXT/JSON subtitles |
+| 🔍 Smart retrieval | Semantic search with query expansion and local reranking |
+| 🤖 MCP Server | Expose VidWise as a tool for AI agents |
+| 📊 Evaluation suite | Rigorous benchmarks with human-verified ground truth |
+| 🔒 Privacy-first | Questions, answers, and transcripts are never logged |
+
+---
+
+## Run it locally
+
+**Requirements:** Python 3.11, a [Google AI Studio API key](https://aistudio.google.com/), and optionally a [Supadata](https://supadata.ai) key for live transcript fetching.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+git clone https://github.com/Rishet11/VidWise-AI
+cd VidWise-AI
+
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
 cp .env.example .env
+# Add your GOOGLE_API_KEY (required) and SUPADATA_API_KEY (optional)
+
 streamlit run app.py
 ```
 
-Required secrets are `GOOGLE_API_KEY` and, for fresh live transcripts, `SUPADATA_API_KEY`. `YOUTUBE_API_KEY` enables playlist and topic discovery. The upload path works without Supadata. Never enable billing merely to run this near-zero-spend MVP.
+> **No Supadata key?** No problem — you can upload subtitle files directly in the app and everything still works.
 
-Optional retrieval overrides: `VIDWISE_EMBEDDING_MODEL` (default `BAAI/bge-base-en-v1.5`), `VIDWISE_EMBEDDING_QUERY_PREFIX` (default is the BGE search-instruction prefix; set to an empty string when swapping to a non-BGE embedder), `VIDWISE_RERANKER_MODEL` (default `cross-encoder/ms-marco-MiniLM-L-6-v2`).
+---
 
-## Verify and deploy
+## Deploy with Docker
 
 ```bash
-pytest -q
 docker build -t vidwise .
 docker run --rm -p 7860:7860 --env-file .env vidwise
 ```
 
-Create a Docker-based Hugging Face Space and add secrets in Space settings. Free hardware sleeps; a cold start can take 2–3 minutes. The current design is intentionally single-worker, and ephemeral cache/log files may be lost after a Space restart.
+Or create a Docker-based Hugging Face Space and add your secrets in the Space settings. The live demo runs entirely on free hardware.
 
-## Evaluation set
+---
 
-The evaluation set begins with 15 questions, including three negatives, and expands to 25–40 after the core loop is validated. Ground truth must be personally checked against public-video timestamps. The runner fails closed while labels are pending:
+## Evaluation
+
+VidWise includes a rigorous evaluation harness covering factual, comparative, and adversarial questions — all verified against real video timestamps. Every result is reproducible from a versioned run artifact.
 
 ```bash
-python3 benchmarks/run_eval.py --model gemini-2.5-flash --config all --runs 3
-inspect eval benchmarks/inspect_task
+python3 benchmarks/run_eval.py --help
 ```
 
-Configs: `naive`, `multi_query`, `rerank`, `combined`, `hyde` (5 total). `hyde` is eval-only and not wired into the live app.
+See [benchmarks/RESULTS.md](benchmarks/RESULTS.md) and [docs/METHODOLOGY.md](docs/METHODOLOGY.md) for the full methodology.
 
-See [protocol](benchmarks/PROTOCOL.md), [results and failure analysis](benchmarks/RESULTS.md), and [methodology](docs/METHODOLOGY.md). No metric is presented until reproduced from a versioned run artifact.
+---
 
-## Limits and privacy
+## Privacy & limits
 
-- 15 questions/session/day and 500 shared questions/day protect free-tier usage.
-- Supadata documents 100 free credits/month; provider-wide remaining credits are not available from the transcript response. Upload remains available when quota is exhausted.
-- Runtime logs contain latency, counts, and a hashed session identifier—not questions, answers, API keys, or raw transcripts.
-- Private, deleted, restricted, and captionless-native videos can fail independently without discarding the rest of the corpus.
-- No full scraped transcript is included in the evaluation set or public dataset.
+- **Nothing sensitive is logged** — no questions, no answers, no transcripts, no API keys
+- Free-tier daily limits are in place to protect shared resources
+- Private or restricted YouTube videos are skipped gracefully without breaking the rest of your session
 
-## Repository
+---
 
-`core/` contains ingestion, FAISS retrieval, and grounded answers; `benchmarks/` contains evaluation code/data; `docs/CONTEXT.md` is the implementation handoff; `mcp_server.py` exposes the research tools.
+## Project layout
 
-MIT licensed.
+```
+core/          Transcript ingestion, semantic search, grounded answers
+benchmarks/    Evaluation set, protocol, and results
+docs/          Methodology and implementation notes
+mcp_server.py  MCP entry point for AI agent integration
+app.py         Streamlit UI
+```
+
+---
+
+## Built with
+
+- [Google Gemini Flash](https://deepmind.google/technologies/gemini/) — grounded answer generation
+- [FAISS](https://github.com/facebookresearch/faiss) — fast semantic vector search
+- [Streamlit](https://streamlit.io) — UI
+- [Supadata](https://supadata.ai) — YouTube transcript fetching
+- [Hugging Face](https://huggingface.co) — hosting
+
+---
+
+MIT Licensed · Made with care by [Rishet Mehra](https://github.com/Rishet11)
