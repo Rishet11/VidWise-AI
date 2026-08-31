@@ -8,123 +8,104 @@ app_port: 7860
 thumbnail: https://huggingface.co/spaces/Rishet11/vidwise/resolve/main/docs/og_image.png
 ---
 
-# VidWise AI
+# VidWise
 
-> **Stop scrubbing through videos. Ask a question. Get the exact answer — with the timestamp to prove it.**
+Ask questions across YouTube videos and jump to the transcript moments behind the answer.
 
-VidWise lets you research across multiple YouTube videos at once. Drop in up to six video links, ask anything, and get a cited answer that points to the exact second in the exact video where it was said. No guessing. No hallucinations. Just evidence.
+[Try the live demo](https://huggingface.co/spaces/Rishet11/vidwise)
 
-🔗 **[Try the live demo →](https://huggingface.co/spaces/Rishet11/vidwise)**
+VidWise accepts up to six YouTube links, playlist links, or uploaded subtitle files. It
+searches their transcripts, drafts an answer from the retrieved sections, and attaches
+clickable timestamp citations. Those citations make the answer easier to inspect. They do
+not guarantee that every generated claim is correct.
 
----
+## What is implemented
 
-## Why VidWise?
+- Research across as many as six videos in one session
+- Direct links to cited transcript timestamps
+- YouTube URLs, public playlists, and SRT, VTT, TXT, or JSON subtitle uploads
+- Semantic retrieval with optional query expansion and local cross-encoder reranking
+- An MCP server for transcript search from compatible agent clients
+- A reproducible evaluation runner with saved run artifacts
 
-Most AI tools summarize videos and call it a day. VidWise goes further:
+## How a question is answered
 
-- **Every claim is cited.** Each part of the answer links directly to the moment it was spoken — down to the second.
-- **Cross-video research.** Ask a single question across six videos simultaneously. Compare, contrast, and synthesize.
-- **No hallucinations.** Answers are grounded entirely in the transcript. If the video didn't say it, VidWise won't either.
-- **Built for agents too.** An MCP server lets AI agents search and cite these transcripts directly — no extra setup.
-
----
-
-## How it works
-
-1. **Paste up to 6 YouTube URLs** (or a playlist link, or upload your own subtitles)
-2. **Ask any question** — factual, comparative, or analytical
-3. **Get a grounded answer** with expandable evidence and clickable timestamp links that jump straight to the moment in the video
-
-That's it.
-
----
-
-## Features
-
-| Feature | Details |
-|---|---|
-| 🎬 Multi-video research | Up to 6 videos in one session |
-| ⏱ Second-level citations | Every claim links to `youtube.com/watch?v=…&t=Ns` |
-| 📂 Flexible input | YouTube URLs, public playlists, or uploaded SRT/VTT/TXT/JSON subtitles |
-| 🔍 Smart retrieval | Semantic search with query expansion and local reranking |
-| 🤖 MCP Server | Expose VidWise as a tool for AI agents |
-| 📊 Evaluation suite | Rigorous benchmarks with human-verified ground truth |
-| 🔒 Privacy-first | Questions, answers, and transcripts are never logged |
-
----
+1. VidWise fetches or parses timestamped transcripts and caches them to avoid repeated
+   provider calls.
+2. It groups transcript segments into overlapping chunks and indexes their embeddings.
+3. It retrieves relevant chunks, with query expansion and reranking when configured.
+4. Gemini receives the question and retrieved evidence with instructions to cite the supplied
+   chunks.
+5. The interface renders each citation as a link to the source video and timestamp.
 
 ## Run it locally
 
-**Requirements:** Python 3.11, a [Google AI Studio API key](https://aistudio.google.com/), and optionally a [Supadata](https://supadata.ai) key for live transcript fetching.
+You need Python 3.11 and a
+[Google AI Studio API key](https://aistudio.google.com/). A
+[Supadata](https://supadata.ai) key is optional and enables live transcript fetching.
 
 ```bash
 git clone https://github.com/Rishet11/VidWise-AI
 cd VidWise-AI
 
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
 cp .env.example .env
-# Add your GOOGLE_API_KEY (required) and SUPADATA_API_KEY (optional)
+# Add GOOGLE_API_KEY. Add SUPADATA_API_KEY only if you need live transcript fetching.
 
 streamlit run app.py
 ```
 
-> **No Supadata key?** No problem — you can upload subtitle files directly in the app and everything still works.
+Without a Supadata key, you can upload subtitle files directly.
 
----
-
-## Deploy with Docker
+### Docker
 
 ```bash
 docker build -t vidwise .
 docker run --rm -p 7860:7860 --env-file .env vidwise
 ```
 
-Or create a Docker-based Hugging Face Space and add your secrets in the Space settings. The live demo runs entirely on free hardware.
+## Evaluation status
 
----
-
-## Evaluation
-
-VidWise includes a rigorous evaluation harness covering factual, comparative, and adversarial questions — all verified against real video timestamps. Every result is reproducible from a versioned run artifact.
+The repository includes a benchmark set and runner for retrieval, citation, abstention, latency,
+and failure-rate measurements. The committed results are a partial baseline covering two of five
+retrieval configurations. Human review of claim support and judge agreement is still pending, so
+the current numbers should not be presented as final accuracy results.
 
 ```bash
 python3 benchmarks/run_eval.py --help
 ```
 
-See [benchmarks/RESULTS.md](benchmarks/RESULTS.md) and [docs/METHODOLOGY.md](docs/METHODOLOGY.md) for the full methodology.
+See [the current results](benchmarks/RESULTS.md) and
+[the evaluation method](docs/METHODOLOGY.md) for the protocol and remaining validation work.
 
----
+## Privacy and operating limits
 
-## Privacy & limits
-
-- **Nothing sensitive is logged** — no questions, no answers, no transcripts, no API keys
-- Free-tier daily limits are in place to protect shared resources
-- Private or restricted YouTube videos are skipped gracefully without breaking the rest of your session
-
----
+- Runtime event logs contain counts, latency, and hashed session identifiers. They do not contain
+  questions or raw transcripts.
+- Transcripts are cached on the host to reduce repeated provider usage.
+- The public deployment limits questions per session and per day to protect shared API quotas.
+- Private, restricted, deleted, or uncaptioned YouTube videos can be replaced with uploaded
+  subtitle files.
 
 ## Project layout
 
+```text
+core/          Transcript ingestion, retrieval, and cited answer generation
+benchmarks/    Evaluation set, runner, and saved results
+docs/          Evaluation and implementation notes
+mcp_server.py  MCP entry point
+app.py         Streamlit interface
 ```
-core/          Transcript ingestion, semantic search, grounded answers
-benchmarks/    Evaluation set, protocol, and results
-docs/          Methodology and implementation notes
-mcp_server.py  MCP entry point for AI agent integration
-app.py         Streamlit UI
-```
 
----
+## Main dependencies
 
-## Built with
+- [Google Gemini](https://deepmind.google/technologies/gemini/) for answer generation
+- [FAISS](https://github.com/facebookresearch/faiss) for vector search
+- [Streamlit](https://streamlit.io) for the interface
+- [Supadata](https://supadata.ai) for optional YouTube transcript fetching
+- [Hugging Face Spaces](https://huggingface.co/spaces) for the public deployment
 
-- [Google Gemini Flash](https://deepmind.google/technologies/gemini/) — grounded answer generation
-- [FAISS](https://github.com/facebookresearch/faiss) — fast semantic vector search
-- [Streamlit](https://streamlit.io) — UI
-- [Supadata](https://supadata.ai) — YouTube transcript fetching
-- [Hugging Face](https://huggingface.co) — hosting
-
----
-
-MIT Licensed · Made with care by [Rishet Mehra](https://github.com/Rishet11)
+MIT licensed. Built by [Rishet Mehra](https://github.com/Rishet11).
